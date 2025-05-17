@@ -1,0 +1,108 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Translate Slugs 1.0.6\n"
+"Report-Msgid-Bugs-To: https://chotto.news\n"
+"POT-Creation-Date: 2025-04-05T15:40:48+09:00\n"
+"PO-Revision-Date: 2025-04-10T15:40:48+09:00\n"
+"Last-Translator: rinmon <rinmon@chotto.news>\n"
+"Language-Team: Japanese\n"
+"Language: ja\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=1; plural=0;\n"
+"X-Generator: Translate Slugs\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: languages\n"
+
+#: admin/class-translate-slugs-admin.php:41
+msgid "Translate Slugs Settings"
+msgstr "Translate Slugs 設定"
+
+#: admin/class-translate-slugs-admin.php:42
+msgid "Translate Slugs"
+msgstr "Translate Slugs"
+
+#: admin/class-translate-slugs-admin.php:75
+msgid "General Settings"
+msgstr "一般設定"
+
+#: admin/class-translate-slugs-admin.php:71
+msgid "DeepL API Key"
+msgstr "DeepL API キー"
+
+#: admin/class-translate-slugs-admin.php:82
+msgid "Enter your DeepL API key to enable automatic translation of Japanese post titles to English permalinks."
+msgstr "DeepL APIキーを入力して、日本語の投稿タイトルを英語のパーマリンクに自動変換する機能を有効にします。"
+
+#: admin/class-translate-slugs-admin.php:83
+msgid "You can get a free API key by signing up at <a href=\"https://www.deepl.com/pro-api\" target=\"_blank\">DeepL API</a>."
+msgstr "<a href=\"https://www.deepl.com/pro-api\" target=\"_blank\">DeepL API</a>に登録することで、無料のAPIキーを取得できます。"
+
+#: admin/class-translate-slugs-admin.php:95
+msgid "Test API Connection"
+msgstr "API接続テスト"
+
+#: admin/class-translate-slugs-admin.php:115
+msgid "Please enter an API key first."
+msgstr "先にAPIキーを入力してください。"
+
+#: admin/class-translate-slugs-admin.php:119
+msgid "Testing..."
+msgstr "テスト中..."
+
+#: admin/class-translate-slugs-admin.php:137
+msgid "Connection error. Please try again."
+msgstr "接続エラー。もう一度お試しください。"
+
+#: translate-slugs.php:60
+msgid "Security check failed."
+msgstr "セキュリティチェックに失敗しました。"
+
+#: translate-slugs.php:67
+msgid "API key is empty."
+msgstr "APIキーが空です。"
+
+#: translate-slugs.php:103
+msgid "API connection successful! Translation test: %s → %s"
+msgstr "API接続成功！翻訳テスト: %s → %s"
+
+#: translate-slugs.php:108
+msgid "API connection failed. Please check your API key."
+msgstr "API接続に失敗しました。APIキーを確認してください。"
+
+#: translate-slugs.php:113
+msgid "API connection failed with error: "
+msgstr "API接続に失敗しました: "
+
+#: translate-slugs.php:134
+msgid "Unknown error"
+msgstr "不明なエラー"
+
+#: translate-slugs.php:140
+msgid "API connection failed. "
+msgstr "API接続に失敗しました。"
+
+#: admin/class-translate-slugs-admin.php:90
+msgid "Auto Retranslate"
+msgstr "自動再翻訳"
+
+#: admin/class-translate-slugs-admin.php:101
+msgid "Uses DeepL API to translate Japanese titles to English and use them as slugs."
+msgstr "DeepL APIを使用して日本語のタイトルを英語に翻訳し、スラッグとして使用します。"
+
+#: admin/class-translate-slugs-admin.php:133
+msgid "Yes - Automatically retranslate slugs when title changes"
+msgstr "はい - タイトル変更時に自動的に再翻訳する"
+
+#: admin/class-translate-slugs-admin.php:139
+msgid "No - Only translate once and keep the manual slug"
+msgstr "いいえ - 初回の翻訳のみ行い、以降は手動で設定したスラッグを維持する"
+
+#: admin/class-translate-slugs-admin.php:142
+msgid "If you select \"Yes\", the slug will be automatically retranslated when the title is changed."
+msgstr "「はい」を選択すると、投稿タイトルを変更した際に自動的に英語に再翻訳します。"
