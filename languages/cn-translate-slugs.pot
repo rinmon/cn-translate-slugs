@@ -1,0 +1,76 @@
+msgid ""
+msgstr ""
+"Project-Id-Version: Translate Slugs 1.0.0\n"
+"Report-Msgid-Bugs-To: https://chotto.news\n"
+"POT-Creation-Date: 2025-04-05T15:40:48+09:00\n"
+"PO-Revision-Date: YEAR-MO-DA HO:MI+ZONE\n"
+"Last-Translator: FULL NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <LL@li.org>\n"
+"Language: \n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=UTF-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+"X-Generator: Translate Slugs\n"
+"X-Poedit-KeywordsList: __;_e;_n:1,2;_x:1,2c;_ex:1,2c;_nx:4c,1,2;esc_attr__;"
+"esc_attr_e;esc_attr_x:1,2c;esc_html__;esc_html_e;esc_html_x:1,2c;_n_noop:1,2;"
+"_nx_noop:3c,1,2;__ngettext_noop:1,2\n"
+"X-Poedit-Basepath: ..\n"
+"X-Poedit-SearchPath-0: .\n"
+"X-Poedit-SearchPathExcluded-0: languages\n"
+
+#: admin/class-translate-slugs-admin.php:41
+msgid "Translate Slugs Settings"
+msgstr ""
+
+#: admin/class-translate-slugs-admin.php:42
+msgid "Translate Slugs"
+msgstr ""
+
+#: admin/class-translate-slugs-admin.php:64
+msgid "DeepL API Settings"
+msgstr ""
+
+#: admin/class-translate-slugs-admin.php:71
+msgid "DeepL API Key"
+msgstr ""
+
+#: admin/class-translate-slugs-admin.php:82
+msgid "Enter your DeepL API key to enable automatic translation of Japanese post titles to English permalinks."
+msgstr ""
+
+#: admin/class-translate-slugs-admin.php:83
+msgid "You can get a free API key by signing up at <a href=\"https://www.deepl.com/pro-api\" target=\"_blank\">DeepL API</a>."
+msgstr ""
+
+#: admin/class-translate-slugs-admin.php:95
+msgid "Test API Connection"
+msgstr ""
+
+#: admin/class-translate-slugs-admin.php:115
+msgid "Please enter an API key first."
+msgstr ""
+
+#: admin/class-translate-slugs-admin.php:119
+msgid "Testing..."
+msgstr ""
+
+#: admin/class-translate-slugs-admin.php:137
+msgid "Connection error. Please try again."
+msgstr ""
+
+#: translate-slugs.php:60
+msgid "Security check failed."
+msgstr ""
+
+#: translate-slugs.php:67
+msgid "API key is empty."
+msgstr ""
+
+#: translate-slugs.php:103
+msgid "API connection successful! Translation test: %s → %s"
+msgstr ""
+
+#: translate-slugs.php:108
+msgid "API connection failed. Please check your API key."
+msgstr ""

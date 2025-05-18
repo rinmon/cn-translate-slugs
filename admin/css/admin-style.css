@@ -1,0 +1,671 @@
+/**
+ * CN Translate Slugs 管理画面のスタイル
+ */
+
+/* 全体のコンテナ */
+.cn-settings-container {
+    max-width: 1200px;
+    margin: 20px 0;
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Oxygen-Sans, Ubuntu, Cantarell, "Helvetica Neue", sans-serif;
+}
+
+/* GitHubスタイルのバージョンバッジ */
+.cn-version-badge {
+    display: inline-block;
+    font-size: 12px;
+    font-weight: 600;
+    line-height: 1;
+    padding: 5px 10px;
+    margin-left: 10px;
+    vertical-align: middle;
+    border-radius: 20px;
+    background-color: #0366d6;
+    color: #ffffff;
+}
+
+.cn-version {
+    font-size: 12px;
+    color: #666;
+    margin-top: -15px;
+    margin-bottom: 15px;
+}
+
+/* カード */
+.cn-card {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    margin-bottom: 20px;
+    padding: 20px;
+    transition: box-shadow 0.3s ease;
+}
+
+.cn-card:hover {
+    box-shadow: 0 3px 8px rgba(0, 0, 0, 0.15);
+}
+
+.cn-card-header {
+    border-bottom: 1px solid #eee;
+    margin-bottom: 15px;
+    padding-bottom: 15px;
+}
+
+.cn-card-title {
+    font-size: 18px;
+    font-weight: 600;
+    margin: 0;
+}
+
+.cn-card-description {
+    color: #666;
+    font-size: 14px;
+    margin-top: 5px;
+}
+
+/* タブ */
+.cn-tabs-nav {
+    display: flex;
+    border-bottom: 1px solid #ccc;
+    margin-bottom: 0;
+    flex-wrap: nowrap;
+    overflow-x: auto;
+}
+
+.cn-tabs-nav a {
+    padding: 12px 20px;
+    color: #555;
+    text-decoration: none;
+    background-color: #f5f5f5;
+    border: 1px solid #ccc;
+    border-bottom: none;
+    margin-right: 5px;
+    border-radius: 5px 5px 0 0;
+    font-weight: 500;
+    transition: all 0.2s ease;
+    white-space: nowrap;
+}
+
+.cn-tabs-nav a:hover {
+    background-color: #e5e5e5;
+}
+
+.cn-tabs-nav a.active {
+    background-color: #fff;
+    border-bottom-color: #fff;
+    color: #0073aa;
+    position: relative;
+}
+
+.cn-tabs-nav a.active:after {
+    content: '';
+    position: absolute;
+    bottom: -1px;
+    left: 0;
+    right: 0;
+    height: 2px;
+    background-color: #fff;
+}
+
+.cn-tab-content {
+    display: none;
+    padding: 20px;
+    background: #fff;
+    border: 1px solid #ddd;
+    border-top: none;
+    border-radius: 0 0 5px 5px;
+}
+
+.cn-tab-content.active {
+    display: block;
+}
+
+/* プロバイダーカード */
+.cn-provider-grid {
+    margin-top: 20px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 15px;
+    justify-content: flex-start;
+}
+
+.cn-provider-card {
+    background: #fff;
+    border: 1px solid #ddd;
+    border-radius: 8px;
+    margin-bottom: 5px;
+    position: relative;
+    transition: all 0.3s ease;
+    cursor: pointer;
+    overflow: hidden;
+    width: calc(33.333% - 10px);
+    min-width: 200px;
+    min-height: 250px;
+    flex-grow: 0;
+    display: flex;
+    flex-direction: column;
+}
+
+.cn-provider-card:hover,
+.cn-provider-card.active {
+    border-color: #0073aa;
+    box-shadow: 0 0 8px rgba(0, 115, 170, 0.3);
+}
+
+@media screen and (max-width: 992px) {
+    .cn-provider-card {
+        width: calc(50% - 10px);
+    }
+    
+    .cn-provider-content h3 {
+        font-size: 16px;
+    }
+}
+
+@media screen and (max-width: 768px) {
+    .cn-tabs-nav {
+        flex-wrap: wrap;
+    }
+    
+    .cn-tabs-nav a {
+        padding: 10px 15px;
+        font-size: 14px;
+        flex-grow: 1;
+        text-align: center;
+    }
+}
+
+@media screen and (max-width: 576px) {
+    .cn-provider-card {
+        width: 100%;
+        min-width: 100%;
+    }
+
+    .cn-tabs-nav a {
+        padding: 8px 12px;
+        font-size: 13px;
+        width: 100%;
+        border-radius: 0;
+    }
+}
+
+.cn-provider-content {
+    padding: 15px;
+    display: flex;
+    flex-direction: column;
+    height: 100%;
+    justify-content: flex-start;
+    align-items: center;
+}
+
+.cn-provider-content h3 {
+    font-size: 18px;
+    margin: 0 0 10px;
+    text-align: center;
+    color: #23282d;
+}
+
+.cn-provider-content p {
+    font-size: 14px;
+    margin-bottom: 15px;
+    color: #555;
+    flex-grow: 1;
+    width: 100%;
+}
+
+.cn-provider-features {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin-top: auto;
+}
+
+.cn-features-list {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 5px;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+}
+
+.cn-features-list li {
+    position: relative;
+    padding-left: 20px;
+    margin-bottom: 5px;
+    font-size: 13px;
+    color: #555;
+}
+
+.cn-features-list li:before {
+    content: '\2713';
+    position: absolute;
+    left: 0;
+    color: #0073aa;
+    font-weight: bold;
+}
+
+.cn-feature {
+    background-color: #eee;
+    border-radius: 4px;
+    color: #555;
+    font-size: 11px;
+    padding: 3px 6px;
+}
+
+/* 入力フィールド */
+.cn-input-group {
+    display: flex;
+    margin-bottom: 15px;
+    position: relative;
+    width: 100%;
+}
+
+.cn-api-input {
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    flex-grow: 1;
+    font-size: 14px;
+    padding: 8px 12px;
+    transition: border-color 0.2s ease;
+}
+
+.cn-api-input:focus {
+    border-color: #0073aa;
+    box-shadow: 0 0 0 1px #0073aa;
+    outline: none;
+}
+
+.cn-key-status {
+    align-items: center;
+    display: flex;
+    margin-left: 10px;
+}
+
+/* ボタン */
+.cn-button {
+    align-items: center;
+    background-color: #f7f7f7;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    color: #555;
+    cursor: pointer;
+    display: inline-flex;
+    font-size: 13px;
+    font-weight: 500;
+    justify-content: center;
+    line-height: normal;
+    padding: 6px 12px;
+    text-decoration: none;
+    transition: all 0.2s ease;
+}
+
+.cn-button:hover {
+    background-color: #f0f0f0;
+    border-color: #999;
+}
+
+.cn-button-primary {
+    background-color: #0073aa;
+    border-color: #006799;
+    color: #fff;
+}
+
+.cn-button-primary:hover {
+    background-color: #006799;
+    border-color: #005680;
+    color: #fff;
+}
+
+.cn-button-icon {
+    padding: 6px;
+}
+
+/* アイコン */
+.cn-icon-test,
+.cn-icon-add,
+.cn-icon-delete,
+.cn-icon-translate,
+.cn-icon-start,
+.cn-icon-end {
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: contain;
+    display: inline-block;
+    height: 16px;
+    margin-right: 5px;
+    width: 16px;
+}
+
+/* テスト結果 */
+.cn-api-result {
+    margin-top: 10px;
+}
+
+/* ワークフロービルダー */
+.cn-workflow-builder {
+    margin-bottom: 20px;
+}
+
+.cn-workflow-container {
+    align-items: center;
+    display: flex;
+    margin: 20px 0;
+}
+
+.cn-workflow-start,
+.cn-workflow-end {
+    align-items: center;
+    background-color: #f0f0f0;
+    border-radius: 4px;
+    display: flex;
+    padding: 8px 12px;
+}
+
+.cn-workflow-steps {
+    display: flex;
+    flex-grow: 1;
+    margin: 0 15px;
+    min-height: 50px;
+    position: relative;
+}
+
+.cn-workflow-steps::before {
+    background-color: #ddd;
+    content: "";
+    height: 2px;
+    left: 0;
+    position: absolute;
+    top: 50%;
+    transform: translateY(-50%);
+    width: 100%;
+    z-index: 0;
+}
+
+.cn-workflow-step {
+    align-items: center;
+    background-color: #fff;
+    border: 1px solid #ddd;
+    border-radius: 4px;
+    cursor: grab;
+    display: flex;
+    margin: 0 5px;
+    padding: 8px 12px;
+    position: relative;
+    z-index: 1;
+}
+
+/* Dashicons用のスタイル */
+.cn-provider-icon {
+    display: inline-block;
+    width: 24px;
+    height: 24px;
+    font-size: 24px;
+    line-height: 1;
+    text-align: center;
+    margin-right: 10px;
+    color: #555;
+}
+
+.cn-workflow-step .cn-provider-icon {
+    width: 18px;
+    height: 18px;
+    font-size: 18px;
+    margin-right: 5px;
+}
+
+.cn-workflow-available-steps {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+    margin-top: 15px;
+}
+
+/* ルールビルダー */
+.cn-rules-builder {
+    margin-bottom: 20px;
+}
+
+.cn-rules-container {
+    margin-bottom: 15px;
+}
+
+.cn-rule {
+    align-items: center;
+    background-color: #f9f9f9;
+    border: 1px solid #eee;
+    border-radius: 4px;
+    display: flex;
+    margin-bottom: 10px;
+    padding: 10px 15px;
+}
+
+.cn-rule-if,
+.cn-rule-then {
+    align-items: center;
+    display: flex;
+    margin-right: 15px;
+}
+
+.cn-rule-if select,
+.cn-rule-then select {
+    margin: 0 5px;
+}
+
+/* 統計ダッシュボード */
+.cn-stats-dashboard {
+    margin-bottom: 20px;
+}
+
+.cn-stats-cards {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(200px, 1fr));
+    gap: 20px;
+    margin-bottom: 20px;
+}
+
+.cn-stats-card {
+    align-items: center;
+    background-color: #f9f9f9;
+    border-radius: 8px;
+    display: flex;
+    padding: 15px;
+}
+
+.cn-stats-icon {
+    align-items: center;
+    background-color: #0073aa;
+    border-radius: 50%;
+    display: flex;
+    height: 40px;
+    justify-content: center;
+    margin-right: 15px;
+    width: 40px;
+}
+
+.cn-stats-icon span {
+    color: #fff;
+}
+
+/* ボタンサイズ調整 - 横長で薄いデザイン */
+.cn-settings-container button.button,
+.cn-settings-container input[type="button"],
+.cn-settings-container input[type="submit"],
+.cn-workflow-area button,
+.cn-api-test-button,
+.cn-button-primary {
+    padding: 2px 12px !important;
+    font-size: 11px !important;
+    height: auto !important;
+    line-height: 1.3 !important;
+    min-height: 24px !important;
+    border-radius: 3px !important;
+    text-transform: uppercase !important;
+    font-weight: 500 !important;
+    letter-spacing: 0.3px !important;
+    transition: all 0.2s ease !important;
+    box-shadow: none !important;
+}
+
+/* ホバー状態 */
+.cn-settings-container button.button:hover,
+.cn-settings-container input[type="button"]:hover,
+.cn-settings-container input[type="submit"]:hover,
+.cn-workflow-area button:hover,
+.cn-api-test-button:hover,
+.cn-button-primary:hover {
+    background-color: #f0f0f0 !important;
+    border-color: #999 !important;
+}
+
+/* ワークフローアイテムのサイズ調整 */
+.cn-workflow-area {
+    margin-bottom: 15px;
+}
+
+.cn-sortable-list li {
+    padding: 6px 8px;
+    margin: 3px 0;
+}
+
+/* プロバイダーカードを小さくする */
+.cn-provider-card {
+    min-height: 180px;
+}
+
+/* APIテスト結果表示エリア */
+.cn-api-test-result {
+    margin-top: 5px;
+    min-height: 20px;
+}
+
+/* APIステータスインジケーター */
+.cn-api-status-indicator {
+    display: flex;
+    align-items: center;
+    margin-top: 5px;
+    font-size: 11px;
+}
+
+.cn-api-status {
+    display: inline-block;
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    margin-right: 5px;
+}
+
+.cn-api-status-empty {
+    background-color: #ccc;
+}
+
+.cn-api-status-error {
+    background-color: #d63638;
+}
+
+.cn-api-status-success {
+    background-color: #00a32a;
+}
+
+.cn-api-status-checking {
+    background-color: #dba617;
+    animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+    0% { opacity: 0.5; }
+    50% { opacity: 1; }
+    100% { opacity: 0.5; }
+}
+
+.cn-api-status-text {
+    color: #666;
+}
+
+.cn-stats-content h4 {
+    font-size: 14px;
+    margin: 0 0 5px;
+}
+
+.cn-stats-value {
+    font-size: 24px;
+    font-weight: 600;
+}
+
+.cn-stats-chart {
+    background-color: #fff;
+    border-radius: 8px;
+    box-shadow: 0 1px 3px rgba(0, 0, 0, 0.1);
+    padding: 20px;
+}
+
+/* ダークモード対応 */
+body.admin-color-midnight {
+    --cn-bg-color: #1e1e2d;
+    --cn-card-bg: #2c2c3f;
+    --cn-text-color: #f0f0f1;
+    --cn-border-color: #4f4f63;
+    --cn-primary-color: #4cb7ff;
+    --cn-primary-hover: #3a9fe0;
+    --cn-feature-bg: #3a3a50;
+    --cn-feature-color: #d0d0d0;
+}
+
+body.admin-color-midnight .cn-card {
+    background-color: var(--cn-card-bg);
+    border-color: var(--cn-border-color);
+}
+
+body.admin-color-midnight .cn-card-title,
+body.admin-color-midnight .cn-tab.active {
+    color: var(--cn-primary-color);
+}
+
+body.admin-color-midnight .cn-tab.active {
+    border-bottom-color: var(--cn-primary-color);
+}
+
+body.admin-color-midnight .cn-provider-card {
+    background-color: var(--cn-card-bg);
+    border-color: var(--cn-border-color);
+}
+
+body.admin-color-midnight .cn-provider-card.active {
+    border-color: var(--cn-primary-color);
+    background-color: #2a3a4a;
+}
+
+body.admin-color-midnight .cn-feature {
+    background-color: var(--cn-feature-bg);
+    color: var(--cn-feature-color);
+}
+
+body.admin-color-midnight .cn-button-primary {
+    background-color: var(--cn-primary-color);
+    border-color: var(--cn-primary-hover);
+}
+
+body.admin-color-midnight .cn-button-primary:hover {
+    background-color: var(--cn-primary-hover);
+}
+
+/* レスポンシブ対応 */
+@media screen and (max-width: 782px) {
+    .cn-provider-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .cn-stats-cards {
+        grid-template-columns: 1fr;
+    }
+    
+    .cn-rule {
+        flex-direction: column;
+        align-items: flex-start;
+    }
+    
+    .cn-rule-if,
+    .cn-rule-then {
+        margin-bottom: 10px;
+        width: 100%;
+    }
+}
