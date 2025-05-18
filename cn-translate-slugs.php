@@ -1,14 +1,17 @@
 <?php
 /**
  * Plugin Name: CN Translate Slugs
- * Plugin URI: https://chotto.news
- * Description: 日本語の投稿タイトルをDeepL APIを使って英語に翻訳し、パーマリンクとして使用します
- * Version: 2.0.5
+ * Plugin URI: https://github.com/rinmon/cn-translate-slugs
+ * Description: 日本語のタイトルを自動的に英語のスラッグに変換するWordPressプラグイン
+ * Version: 2.0.6
  * Author: rinmon
- * Author URI: https://chotto.news
+ * Author URI: https://cn7.jp
+ * License: GPL-2.0+
+ * License URI: http://www.gnu.org/licenses/gpl-2.0.txt
  * Text Domain: cn-translate-slugs
  * Domain Path: /languages
- * License: GPL v2 or later
+ * Requires at least: 5.0
+ * Requires PHP: 7.2
  */
 
 // Exit if accessed directly
