@@ -87,20 +87,7 @@ foreach ($all_providers as $key => $provider) {
 }
 
 ?>
-<div class="cn-section">
-    <h3><?php esc_html_e('APIキー設定', 'cn-translate-slugs'); ?></h3>
-    <p><?php esc_html_e('各翻訳プロバイダーのAPIキーを設定します。', 'cn-translate-slugs'); ?></p>
-    
-    <?php
-    // Display other API key fields
-    if (isset($all_providers['google'])) {
-        cn_display_api_key_field('google', $all_providers['google']['name'], 'cn_translate_slugs_google_api_key', $google_api_key);
-    }
-    if (isset($all_providers['microsoft'])) {
-         cn_display_api_key_field('microsoft', $all_providers['microsoft']['name'], 'cn_translate_slugs_microsoft_api_key', $microsoft_api_key);
-    }
-    ?>
-</div>
+
 
 <div class="cn-section">
     <h3><?php esc_html_e('翻訳ワークフロー', 'cn-translate-slugs'); ?></h3>
