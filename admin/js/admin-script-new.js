@@ -113,65 +113,6 @@ jQuery(document).ready(function($) {
     
     // APIキーテスト機能
     function initApiTest() {
-        // APIキー入力時の自動チェック
-        $('#cn_translate_slugs_deepl_api_key').on('input', debounce(function() {
-            var apiKey = $(this).val();
-            var $statusIndicator = $('#cn-deepl-api-status');
-            var $statusText = $statusIndicator.next('.cn-api-status-text');
-            
-            // APIキーが入力されていない場合
-            if (!apiKey || apiKey.length < 10) {
-                $statusIndicator.removeClass().addClass('cn-api-status cn-api-status-empty');
-                $statusText.text('APIキーが設定されていません');
-                return;
-            }
-            
-            // チェック中の表示
-            $statusIndicator.removeClass().addClass('cn-api-status cn-api-status-checking');
-            $statusText.text('接続確認中...');
-            
-            // APIキーが変更された場合はテスト結果をクリア
-            $('#cn-deepl-api-test-result').empty();
-            
-            // API種類取得
-            var apiType = $('input[name="cn_translate_slugs_deepl_api_type"]:checked').val();
-            
-            // 自動チェック実行
-            $.ajax({
-                url: ajaxurl,
-                type: 'POST',
-                data: {
-                    action: 'cn_test_api_connection',
-                    provider: 'deepl',
-                    api_key: apiKey,
-                    api_type: apiType,
-                    nonce: cn_translate_slugs.nonce
-                },
-                success: function(response) {
-                    if (response.success) {
-                        $statusIndicator.removeClass().addClass('cn-api-status cn-api-status-success');
-                        $statusText.text('接続成功: ' + response.data.translated_text);
-                    } else {
-                        $statusIndicator.removeClass().addClass('cn-api-status cn-api-status-error');
-                        $statusText.text('接続エラー: ' + response.data.message);
-                    }
-                },
-                error: function() {
-                    $statusIndicator.removeClass().addClass('cn-api-status cn-api-status-error');
-                    $statusText.text('サーバーエラーが発生しました');
-                }
-            });
-        }, 800)); // 800msデバウンス
-        
-        // API種類変更時にも自動チェック
-        $('input[name="cn_translate_slugs_deepl_api_type"]').on('change', function() {
-            var apiKey = $('#cn_translate_slugs_deepl_api_key').val();
-            if (apiKey && apiKey.length >= 10) {
-                $('#cn_translate_slugs_deepl_api_key').trigger('input');
-            }
-        });
-        
-        // テストボタンクリック時のアクション
         $('.cn-api-test-button').on('click', function() {
             var $button = $(this);
             var provider = $button.data('provider');
@@ -200,55 +141,18 @@ jQuery(document).ready(function($) {
                 success: function(response) {
                     if (response.success) {
                         $resultContainer.html('<span style="color: green;">接続成功！「' + response.data.translated_text + '」</span>');
-                        
-                        // ステータスインジケーターも更新
-                        if (provider === 'deepl') {
-                            $('#cn-deepl-api-status').removeClass().addClass('cn-api-status cn-api-status-success');
-                            $('#cn-deepl-api-status').next('.cn-api-status-text').text('接続成功');
-                        }
                     } else {
                         $resultContainer.html('<span style="color: red;">接続エラー: ' + response.data.message + '</span>');
-                        
-                        // ステータスインジケーターも更新
-                        if (provider === 'deepl') {
-                            $('#cn-deepl-api-status').removeClass().addClass('cn-api-status cn-api-status-error');
-                            $('#cn-deepl-api-status').next('.cn-api-status-text').text('接続エラー');
-                        }
                     }
                 },
                 error: function() {
                     $resultContainer.html('<span style="color: red;">サーバーエラーが発生しました</span>');
-                    
-                    // ステータスインジケーターも更新
-                    if (provider === 'deepl') {
-                        $('#cn-deepl-api-status').removeClass().addClass('cn-api-status cn-api-status-error');
-                        $('#cn-deepl-api-status').next('.cn-api-status-text').text('サーバーエラー');
-                    }
                 },
                 complete: function() {
                     $button.prop('disabled', false).text('テスト');
                 }
             });
         });
-        
-        // ページ読み込み時の初期チェック
-        if ($('#cn_translate_slugs_deepl_api_key').val()) {
-            setTimeout(function() {
-                $('#cn_translate_slugs_deepl_api_key').trigger('input');
-            }, 500);
-        }
-    }
-    
-    // デバウンス関数ヘルパー
-    function debounce(func, wait) {
-        var timeout;
-        return function() {
-            var context = this, args = arguments;
-            clearTimeout(timeout);
-            timeout = setTimeout(function() {
-                func.apply(context, args);
-            }, wait);
-        };
     }
     
     // 翻訳テストページの機能

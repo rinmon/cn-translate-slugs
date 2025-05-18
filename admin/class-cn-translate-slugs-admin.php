@@ -95,6 +95,16 @@ class CN_Translate_Slugs_Admin {
             )
         );
         
+        // DeepL API種類設定（Free/Pro）
+        register_setting(
+            'cn_translate_slugs_settings',
+            'cn_translate_slugs_deepl_api_type',
+            array(
+                'sanitize_callback' => 'sanitize_text_field',
+                'default' => 'pro',
+            )
+        );
+        
         // Google API キー設定
         register_setting(
             'cn_translate_slugs_settings',

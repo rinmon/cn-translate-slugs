@@ -12,8 +12,10 @@ if (!defined('ABSPATH')) {
 ?>
 
 <div class="wrap cn-settings-container">
-    <h1><?php echo esc_html(__('CN Translate Slugs Settings', 'cn-translate-slugs')); ?></h1>
-    <p class="cn-version"><?php echo sprintf(__('Version: %s', 'cn-translate-slugs'), CN_TRANSLATE_SLUGS_VERSION); ?></p>
+    <h1>
+        <?php echo esc_html(__('CN Translate Slugs Settings', 'cn-translate-slugs')); ?>
+        <span class="cn-version-badge"><?php echo CN_TRANSLATE_SLUGS_VERSION; ?></span>
+    </h1>
     
     <form action="options.php" method="post">
         <?php settings_fields('cn_translate_slugs_settings'); ?>

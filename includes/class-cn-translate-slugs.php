@@ -214,8 +214,15 @@ class CN_Translate_Slugs {
             return '';
         }
 
-        // DeepL API エンドポイント
-        $api_url = 'https://api.deepl.com/v2/translate';
+        // APIタイプを取得
+        $api_type = get_option('cn_translate_slugs_deepl_api_type', 'pro');
+        
+        // DeepL API エンドポイント（API種類によって切り替え）
+        if ($api_type === 'free') {
+            $api_url = 'https://api-free.deepl.com/v2/translate'; // 無償版
+        } else {
+            $api_url = 'https://api.deepl.com/v2/translate'; // 有償版（デフォルト）
+        }
         
         // リクエストパラメータ
         $params = array(
@@ -266,20 +273,23 @@ class CN_Translate_Slugs {
         }
 
         // Google Cloud Translation API エンドポイント
-        $api_url = 'https://translation.googleapis.com/language/translate/v2?key=' . $api_key;
+        $api_url = 'https://translation.googleapis.com/language/translate/v2';
         
         // リクエストパラメータ
         $params = array(
             'q' => $text,
             'source' => 'ja',
             'target' => 'en',
+            'key' => $api_key,
             'format' => 'text'
         );
 
+        // URLパラメータをクエリ文字列に変換
+        $url = add_query_arg($params, $api_url);
+
         // APIリクエスト
-        $response = wp_remote_post($api_url, array(
-            'body' => $params,
-            'timeout' => 15,
+        $response = wp_remote_get($url, array(
+            'timeout' => 15
         ));
 
         // エラーチェック
@@ -314,23 +324,34 @@ class CN_Translate_Slugs {
         }
 
         // Microsoft Translator API エンドポイント
-        $api_url = 'https://api.cognitive.microsofttranslator.com/translate?api-version=3.0&from=ja&to=en';
+        $api_url = 'https://api.cognitive.microsofttranslator.com/translate';
         
         // リクエストパラメータ
         $params = array(
-            array(
-                'text' => $text
-            )
+            'api-version' => '3.0',
+            'from' => 'ja',
+            'to' => 'en'
         );
 
+        // リクエストボディ
+        $body = json_encode(array(
+            array(
+                'Text' => $text
+            )
+        ));
+
+        // URLパラメータをクエリ文字列に変換
+        $url = add_query_arg($params, $api_url);
+
         // APIリクエスト
-        $response = wp_remote_post($api_url, array(
-            'body' => json_encode($params),
+        $response = wp_remote_post($url, array(
+            'body' => $body,
             'timeout' => 15,
             'headers' => array(
-                'Ocp-Apim-Subscription-Key' => $api_key,
                 'Content-Type' => 'application/json',
-            ),
+                'Ocp-Apim-Subscription-Key' => $api_key,
+                'Ocp-Apim-Subscription-Region' => 'global'
+            )
         ));
 
         // エラーチェック
@@ -358,29 +379,35 @@ class CN_Translate_Slugs {
      * @return string 翻訳されたテキスト
      */
     private function translate_with_dictionary($text) {
-        // ローカル辞書を取得
-        $dictionary = get_option('cn_translate_slugs_dictionary', array());
-        if (empty($dictionary)) {
+        // 辞書データを取得
+        $dictionary_json = get_option('cn_translate_slugs_local_dictionary', '{}');
+        $dictionary = json_decode($dictionary_json, true);
+        
+        if (empty($dictionary) || !is_array($dictionary)) {
             return '';
         }
-
-        // 辞書に一致するエントリがあるか検索
-        foreach ($dictionary as $entry) {
-            if (isset($entry['ja']) && $entry['ja'] === $text && isset($entry['en'])) {
-                return $entry['en'];
-            }
-        }
-
-        // 部分マッチも試みる（単語単位の置換）
-        $words = preg_split('/\s+/u', $text);
-        $translated_words = array();
+        
+        // 単語ごとに分割
+        $words = preg_split('/\s+/', $text);
+        $translated_words = [];
         $has_match = false;
-
+        
+        // 各単語を辞書と照合して翻訳
         foreach ($words as $word) {
             $replaced = false;
-            foreach ($dictionary as $entry) {
-                if (isset($entry['ja']) && $entry['ja'] === $word && isset($entry['en'])) {
-                    $translated_words[] = $entry['en'];
+            
+            // 完全一致で辞書検索
+            if (isset($dictionary[$word])) {
+                $translated_words[] = $dictionary[$word];
+                $replaced = true;
+                $has_match = true;
+                continue;
+            }
+            
+            // 部分一致で辞書検索
+            foreach ($dictionary as $source => $target) {
+                if (mb_strpos($word, $source) !== false) {
+                    $translated_words[] = str_replace($source, $target, $word);
                     $replaced = true;
                     $has_match = true;
                     break;
