@@ -92,69 +92,6 @@ foreach ($all_providers as $key => $provider) {
     <p><?php esc_html_e('各翻訳プロバイダーのAPIキーを設定します。', 'cn-translate-slugs'); ?></p>
     
     <?php
-    // Display DeepL API key field and settings first
-    if (isset($all_providers['deepl'])) {
-        ?>
-        <div id="cn_deepl_api_key_fields" class="cn-provider-settings">
-            <table class="form-table">
-                <tr>
-                    <th scope="row">
-                        <label for="cn_translate_slugs_deepl_api_key"><?php echo esc_html($all_providers['deepl']['name']); ?> <?php esc_html_e('APIキー', 'cn-translate-slugs'); ?></label>
-                    </th>
-                    <td>
-                        <div style="display: flex; align-items: center;">
-                            <input type="text" id="cn_translate_slugs_deepl_api_key" name="cn_translate_slugs_deepl_api_key" 
-                                value="<?php echo esc_attr($api_key); ?>" class="regular-text" 
-                                placeholder="ここにDeepL APIキーを入力してください" />
-                            <button type="button" class="button cn-api-test-button" 
-                                data-provider="deepl" 
-                                style="margin-left: 10px;">
-                                <?php esc_html_e('テスト', 'cn-translate-slugs'); ?>
-                            </button>
-                        </div>
-                        <div id="cn-deepl-api-test-result" class="cn-api-test-result"></div>
-                        <div class="cn-api-status-indicator">
-                            <span id="cn-deepl-api-status" class="cn-api-status <?php echo $api_key ? 'cn-api-status-checking' : 'cn-api-status-empty'; ?>"></span>
-                            <span class="cn-api-status-text"><?php echo $api_key ? '接続状態確認中...' : 'APIキーが設定されていません'; ?></span>
-                        </div>
-                        <p class="description">
-                            <?php
-                            printf(esc_html__('%sを使用するためのAPIキーを入力してください。', 'cn-translate-slugs'), esc_html($all_providers['deepl']['name']));
-                            ?>
-                            <a href="https://www.deepl.com/pro-api" target="_blank"><?php esc_html_e('APIキーの取得方法', 'cn-translate-slugs'); ?></a>
-                        </p>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        
-        <!-- DeepL API Type selector (Free/Pro) -->
-        <div id="cn_deepl_api_type_fields" class="cn-provider-settings">
-            <table class="form-table">
-                <tr>
-                    <th scope="row">
-                        <label for="cn_translate_slugs_deepl_api_type"><?php esc_html_e('DeepL API種類', 'cn-translate-slugs'); ?></label>
-                    </th>
-                    <td>
-                        <fieldset>
-                            <legend class="screen-reader-text"><?php esc_html_e('DeepL API種類', 'cn-translate-slugs'); ?></legend>
-                            <label>
-                                <input type="radio" name="cn_translate_slugs_deepl_api_type" value="pro" <?php checked($api_type, 'pro'); ?>>
-                                <?php esc_html_e('Pro（有償版）', 'cn-translate-slugs'); ?>
-                            </label><br>
-                            <label>
-                                <input type="radio" name="cn_translate_slugs_deepl_api_type" value="free" <?php checked($api_type, 'free'); ?>>
-                                <?php esc_html_e('Free（無償版）', 'cn-translate-slugs'); ?>
-                            </label>
-                            <p class="description"><?php esc_html_e('DeepL APIの種類に合わせて選択してください。異なるAPIエンドポイントが使用されます。', 'cn-translate-slugs'); ?></p>
-                        </fieldset>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <?php
-    }
-    
     // Display other API key fields
     if (isset($all_providers['google'])) {
         cn_display_api_key_field('google', $all_providers['google']['name'], 'cn_translate_slugs_google_api_key', $google_api_key);
