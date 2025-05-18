@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('CN_TRANSLATE_SLUGS_VERSION', '2.0.3');
+define('CN_TRANSLATE_SLUGS_VERSION', '2.0.5');
 define('CN_TRANSLATE_SLUGS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CN_TRANSLATE_SLUGS_PLUGIN_URL', plugin_dir_url(__FILE__));
 
