@@ -136,14 +136,9 @@ foreach ($all_providers as $key => $provider) {
      <input type="hidden" id="cn_translate_slugs_workflow_input" name="cn_translate_slugs_workflow" value="<?php echo esc_attr($workflow_json); ?>">
 </div>
 
-
-<div class="cn-section">
-    <h3><?php esc_html_e('APIキー設定', 'cn-translate-slugs'); ?></h3>
-    <p><?php esc_html_e('各翻訳プロバイダーのAPIキーを設定します。ワークフローで使用されているプロバイダーの設定のみが表示されます。', 'cn-translate-slugs'); ?></p>
-
-    <?php
-    // Helper function to display API key fields
-    function cn_display_api_key_field($provider_key, $provider_name, $option_name, $current_value) {
+<?php
+// Helper function to display API key fields
+function cn_display_api_key_field($provider_key, $provider_name, $option_name, $current_value) {
         global $active_workflow_providers, $api_type; // Access the global variables
         // Determine if the field should be displayed: always show if it's deepl (as a fallback/default?) or if it's in the active workflow
         $is_active = isset($active_workflow_providers[$provider_key]);
@@ -170,6 +165,13 @@ foreach ($all_providers as $key => $provider) {
         <?php
     }
 
+?>
+
+<div class="cn-section">
+    <h3><?php esc_html_e('APIキー設定', 'cn-translate-slugs'); ?></h3>
+    <p><?php esc_html_e('各翻訳プロバイダーのAPIキーを設定します。ワークフローで使用されているプロバイダーの設定のみが表示されます。', 'cn-translate-slugs'); ?></p>
+
+<?php
     // Display API key fields for providers that might need keys
     // The visibility is controlled by the cn_display_api_key_field function based on $active_workflow_providers
     if (isset($all_providers['deepl'])) {

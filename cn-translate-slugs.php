@@ -3,7 +3,7 @@
  * Plugin Name: CN Translate Slugs
  * Plugin URI: https://chotto.news
  * Description: 日本語の投稿タイトルをDeepL APIを使って英語に翻訳し、パーマリンクとして使用します
- * Version: 2.0.8
+ * Version: 2.0.9
  * Author: rinmon
  * Author URI: https://chotto.news
  * Text Domain: cn-translate-slugs
@@ -17,7 +17,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('CN_TRANSLATE_SLUGS_VERSION', '2.0.8');
+define('CN_TRANSLATE_SLUGS_VERSION', '2.0.9');
 define('CN_TRANSLATE_SLUGS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CN_TRANSLATE_SLUGS_PLUGIN_URL', plugin_dir_url(__FILE__));
 
