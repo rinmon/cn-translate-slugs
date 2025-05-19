@@ -137,34 +137,42 @@ foreach ($all_providers as $key => $provider) {
 </div>
 
 <?php
-// Helper function to display API key fields
+/**
+ * Helper function to display API key fields
+ * 
+ * @param string $provider_key Provider key identifier
+ * @param string $provider_name Display name of the provider
+ * @param string $option_name Option name for storing the API key
+ * @param string $current_value Current API key value
+ */
 function cn_display_api_key_field($provider_key, $provider_name, $option_name, $current_value) {
-        global $active_workflow_providers, $api_type; // Access the global variables
-        // Determine if the field should be displayed: always show if it's deepl (as a fallback/default?) or if it's in the active workflow
-        $is_active = isset($active_workflow_providers[$provider_key]);
-        $display_style = $is_active ? 'block' : 'none';
-        ?>
-        <div id="cn_<?php echo esc_attr($provider_key); ?>_fields" class="cn-provider-settings" style="display: <?php echo $display_style; ?>;">
-             <table class="form-table">
-                <tr>
-                    <th scope="row">
-                        <label for="<?php echo esc_attr($option_name); ?>"><?php echo esc_html($provider_name); ?> <?php esc_html_e('APIキー', 'cn-translate-slugs'); ?></label>
-                    </th>
-                    <td>
-                        <input type="password" id="<?php echo esc_attr($option_name); ?>" name="<?php echo esc_attr($option_name); ?>" value="<?php echo esc_attr($current_value); ?>" class="regular-text">
-                         <p class="description">
-                            <?php
-                            /* translators: %s: Provider name */
-                            printf(esc_html__('%sを使用するためのAPIキーを入力してください。', 'cn-translate-slugs'), esc_html($provider_name));
-                            ?>
-                        </p>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <?php
-    }
+    global $active_workflow_providers, $api_type; // Access the global variables
+    // Determine if the field should be displayed: always show if it's deepl (as a fallback/default?) or if it's in the active workflow
+    $is_active = isset($active_workflow_providers[$provider_key]);
+    $display_style = $is_active ? 'block' : 'none';
+    ?>
+    <div id="cn_<?php echo esc_attr($provider_key); ?>_fields" class="cn-provider-settings" style="display: <?php echo $display_style; ?>;">
+        <table class="form-table">
+            <tr>
+                <th scope="row">
+                    <label for="<?php echo esc_attr($option_name); ?>"><?php echo esc_html($provider_name); ?> <?php esc_html_e('APIキー', 'cn-translate-slugs'); ?></label>
+                </th>
+                <td>
+                    <input type="password" id="<?php echo esc_attr($option_name); ?>" name="<?php echo esc_attr($option_name); ?>" value="<?php echo esc_attr($current_value); ?>" class="regular-text">
+                    <p class="description">
+                        <?php
+                        /* translators: %s: Provider name */
+                        printf(esc_html__('%sを使用するためのAPIキーを入力してください。', 'cn-translate-slugs'), esc_html($provider_name));
+                        ?>
+                    </p>
+                </td>
+            </tr>
+        </table>
+    </div>
+    <?php
+}
 
+// Close the PHP tag to start HTML output
 ?>
 
 <div class="cn-section">
@@ -175,6 +183,7 @@ function cn_display_api_key_field($provider_key, $provider_name, $option_name, $
     // Display API key fields for providers that might need keys
     // The visibility is controlled by the cn_display_api_key_field function based on $active_workflow_providers
     if (isset($all_providers['deepl'])) {
+        // Display DeepL API key field
         cn_display_api_key_field('deepl', $all_providers['deepl']['name'], 'cn_translate_slugs_deepl_api_key', $api_key);
         
         // DeepL API Type selector (Free/Pro)
@@ -206,11 +215,15 @@ function cn_display_api_key_field($provider_key, $provider_name, $option_name, $
         </div>
         <?php
     }
+    
+    // Google APIキー設定フィールド
     if (isset($all_providers['google'])) {
         cn_display_api_key_field('google', $all_providers['google']['name'], 'cn_translate_slugs_google_api_key', $google_api_key);
     }
+    
+    // Microsoft APIキー設定フィールド
     if (isset($all_providers['microsoft'])) {
-         cn_display_api_key_field('microsoft', $all_providers['microsoft']['name'], 'cn_translate_slugs_microsoft_api_key', $microsoft_api_key);
+        cn_display_api_key_field('microsoft', $all_providers['microsoft']['name'], 'cn_translate_slugs_microsoft_api_key', $microsoft_api_key);
     }
     ?>
 </div>
