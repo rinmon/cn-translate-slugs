@@ -8,6 +8,8 @@
  * Author URI: https://chotto.news
  * Text Domain: cn-translate-slugs
  * Domain Path: /languages
+ * Requires at least: 5.0
+ * Requires PHP: 7.2
  * License: GPL v2 or later
  */
 
