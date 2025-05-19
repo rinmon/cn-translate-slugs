@@ -1,10 +1,11 @@
 === CN Translate Slugs ===
+=== CN Translate Slugs ===
 Contributors: rinmon
 Donate link: https://chotto.news
 Tags: permalinks, japanese, deepl, translation, slugs, multilingual
 Requires at least: 5.0
 Tested up to: 6.4
-Stable tag: 2.0.9
+Stable tag: 2.0.10
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -84,6 +85,10 @@ CN Translate Slugsは、日本語の投稿タイトルを自動的に英語に�
 5. 統計タブ - API使用状況
 
 == Changelog ==
+
+= 2.0.10 =
+* APIキー入力フィールドの表示問題を修正
+* API設定画面のユーザビリティ向上
 
 = 2.0.9 =
 * 設定画面のAPIキー設定セクションの重複表示問題を修正

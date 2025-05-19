@@ -147,8 +147,10 @@ foreach ($all_providers as $key => $provider) {
  */
 function cn_display_api_key_field($provider_key, $provider_name, $option_name, $current_value) {
     global $active_workflow_providers, $api_type; // Access the global variables
-    // Determine if the field should be displayed: always show if it's deepl (as a fallback/default?) or if it's in the active workflow
-    $is_active = isset($active_workflow_providers[$provider_key]);
+    
+    // APIキー入力フィールドは常に表示するが、DeepL以外はワークフローで選択されている場合のみ表示
+    // DeepLは常に表示（デフォルトプロバイダー）
+    $is_active = ($provider_key === 'deepl') || isset($active_workflow_providers[$provider_key]);
     $display_style = $is_active ? 'block' : 'none';
     ?>
     <div id="cn_<?php echo esc_attr($provider_key); ?>_fields" class="cn-provider-settings" style="display: <?php echo $display_style; ?>;">
@@ -181,10 +183,25 @@ function cn_display_api_key_field($provider_key, $provider_name, $option_name, $
 
 <?php
     // Display API key fields for providers that might need keys
-    // The visibility is controlled by the cn_display_api_key_field function based on $active_workflow_providers
     if (isset($all_providers['deepl'])) {
-        // Display DeepL API key field
-        cn_display_api_key_field('deepl', $all_providers['deepl']['name'], 'cn_translate_slugs_deepl_api_key', $api_key);
+        // DeepL APIキー入力フィールド
+        ?>
+        <div id="cn_deepl_api_key_container" class="cn-provider-settings">
+            <table class="form-table">
+                <tr>
+                    <th scope="row">
+                        <label for="cn_translate_slugs_deepl_api_key"><?php echo esc_html($all_providers['deepl']['name']); ?> <?php esc_html_e('APIキー', 'cn-translate-slugs'); ?></label>
+                    </th>
+                    <td>
+                        <input type="password" id="cn_translate_slugs_deepl_api_key" name="cn_translate_slugs_deepl_api_key" value="<?php echo esc_attr($api_key); ?>" class="regular-text">
+                        <p class="description">
+                            <?php printf(esc_html__('%sを使用するためのAPIキーを入力してください。', 'cn-translate-slugs'), esc_html($all_providers['deepl']['name'])); ?>
+                        </p>
+                    </td>
+                </tr>
+            </table>
+        </div>
+        <?php
         
         // DeepL API Type selector (Free/Pro)
         $is_active = isset($active_workflow_providers['deepl']);
