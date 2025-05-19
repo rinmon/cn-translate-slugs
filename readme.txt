@@ -4,7 +4,7 @@ Donate link: https://chotto.news
 Tags: permalinks, japanese, deepl, translation, slugs, multilingual
 Requires at least: 5.0
 Tested up to: 6.4
-Stable tag: 2.0.8
+Stable tag: 2.0.9
 Requires PHP: 7.2
 License: GPLv2 or later
 License URI: http://www.gnu.org/licenses/gpl-2.0.html
@@ -84,6 +84,13 @@ CN Translate Slugsは、日本語の投稿タイトルを自動的に英語に�
 5. 統計タブ - API使用状況
 
 == Changelog ==
+
+= 2.0.9 =
+* 設定画面のAPIキー設定セクションの重複表示問題を修正
+* 管理画面UIの改善
+
+= 2.0.8 =
+* DeepL API種類設定の重複表示問題を修正
 
 = 2.0.3 =
 * 管理画面UI/UXの改善

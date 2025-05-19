@@ -1,6 +1,6 @@
 # CN Translate Slugs
 
-[![Version](https://img.shields.io/badge/version-2.0.8-blue.svg)](https://github.com/rinmon/cn-translate-slugs/releases)
+[![Version](https://img.shields.io/badge/version-2.0.9-blue.svg)](https://github.com/rinmon/cn-translate-slugs/releases)
 [![WordPress](https://img.shields.io/badge/wordpress-5.0%2B-green.svg)](https://wordpress.org/)
 [![License](https://img.shields.io/badge/license-GPL--2.0%2B-orange.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 
