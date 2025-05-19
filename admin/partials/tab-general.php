@@ -160,7 +160,11 @@ function cn_display_api_key_field($provider_key, $provider_name, $option_name, $
                     <label for="<?php echo esc_attr($option_name); ?>"><?php echo esc_html($provider_name); ?> <?php esc_html_e('APIキー', 'cn-translate-slugs'); ?></label>
                 </th>
                 <td>
-                    <input type="password" id="<?php echo esc_attr($option_name); ?>" name="<?php echo esc_attr($option_name); ?>" value="<?php echo esc_attr($current_value); ?>" class="regular-text">
+                    <div class="cn-api-key-field-wrapper">
+                        <input type="text" id="<?php echo esc_attr($option_name); ?>" name="<?php echo esc_attr($option_name); ?>" value="<?php echo esc_attr($current_value); ?>" class="regular-text cn-api-key-input">
+                        <button type="button" class="button cn-test-api-button" data-provider="<?php echo esc_attr($provider_key); ?>"><?php esc_html_e('テスト', 'cn-translate-slugs'); ?></button>
+                        <span class="cn-api-test-result"></span>
+                    </div>
                     <p class="description">
                         <?php
                         /* translators: %s: Provider name */

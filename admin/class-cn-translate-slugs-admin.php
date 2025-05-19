@@ -518,6 +518,165 @@ class CN_Translate_Slugs_Admin {
     }
     
     /**
+     * 翻訳プレビューAJAXハンドラー
+     * タブの「翻訳テスト」機能で使用
+     */
+    public function preview_translation_ajax() {
+        // nonce検証
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'cn_translate_slugs_nonce')) {
+            wp_send_json_error(array('message' => __('セキュリティチェックに失敗しました。', 'cn-translate-slugs')));
+        }
+        
+        // 翻訳するテキストを取得
+        if (!isset($_POST['text']) || empty($_POST['text'])) {
+            wp_send_json_error(array('message' => __('翻訳するテキストが指定されていません。', 'cn-translate-slugs')));
+        }
+        
+        $text = sanitize_text_field($_POST['text']);
+        $provider = get_option('cn_translate_slugs_provider', 'deepl');
+        
+        // プロバイダーに応じた翻訳処理
+        $result = array();
+        $translated_text = '';
+        
+        switch ($provider) {
+            case 'deepl':
+                $api_key = get_option('cn_translate_slugs_deepl_api_key', '');
+                if (empty($api_key)) {
+                    wp_send_json_error(array('message' => __('DeepL APIキーが設定されていません。', 'cn-translate-slugs')));
+                }
+                
+                $api_type = get_option('cn_translate_slugs_deepl_api_type', 'pro');
+                $response = $this->translate_with_deepl($text, 'JA', 'EN', $api_key);
+                
+                if (is_wp_error($response)) {
+                    wp_send_json_error(array('message' => $response->get_error_message()));
+                }
+                
+                $translated_text = $response['text'];
+                break;
+                
+            case 'google':
+                $api_key = get_option('cn_translate_slugs_google_api_key', '');
+                if (empty($api_key)) {
+                    wp_send_json_error(array('message' => __('Google APIキーが設定されていません。', 'cn-translate-slugs')));
+                }
+                
+                $response = $this->translate_with_google($text, 'ja', 'en', $api_key);
+                
+                if (is_wp_error($response)) {
+                    wp_send_json_error(array('message' => $response->get_error_message()));
+                }
+                
+                $translated_text = $response['text'];
+                break;
+                
+            case 'microsoft':
+                $api_key = get_option('cn_translate_slugs_microsoft_api_key', '');
+                if (empty($api_key)) {
+                    wp_send_json_error(array('message' => __('Microsoft APIキーが設定されていません。', 'cn-translate-slugs')));
+                }
+                
+                // Microsoft API処理を実装
+                wp_send_json_error(array('message' => __('Microsoft翻訳は現在実装中です。', 'cn-translate-slugs')));
+                break;
+                
+            default:
+                wp_send_json_error(array('message' => __('サポートされていない翻訳プロバイダーです。', 'cn-translate-slugs')));
+        }
+        
+        // スラグ生成処理
+        $slug = sanitize_title($translated_text);
+        
+        // 文字数カウント（統計用）
+        $char_count = mb_strlen($text);
+        $this->update_translation_stats($provider, $char_count);
+        
+        wp_send_json_success(array(
+            'translation' => $translated_text,
+            'slug' => $slug,
+            'provider' => $provider
+        ));
+    }
+    
+    /**
+     * 翻訳プロバイダー比較AJAXハンドラー
+     */
+    public function compare_translations_ajax() {
+        // nonce検証
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'cn_translate_slugs_nonce')) {
+            wp_send_json_error(array('message' => __('セキュリティチェックに失敗しました。', 'cn-translate-slugs')));
+        }
+        
+        // 翻訳するテキストを取得
+        if (!isset($_POST['text']) || empty($_POST['text'])) {
+            wp_send_json_error(array('message' => __('翻訳するテキストが指定されていません。', 'cn-translate-slugs')));
+        }
+        
+        $text = sanitize_text_field($_POST['text']);
+        $results = array();
+        
+        // DeepL翻訳
+        $deepl_api_key = get_option('cn_translate_slugs_deepl_api_key', '');
+        if (!empty($deepl_api_key)) {
+            $response = $this->translate_with_deepl($text, 'JA', 'EN', $deepl_api_key);
+            if (!is_wp_error($response)) {
+                $results['deepl'] = array(
+                    'translation' => $response['text'],
+                    'slug' => sanitize_title($response['text'])
+                );
+            }
+        }
+        
+        // Google翻訳
+        $google_api_key = get_option('cn_translate_slugs_google_api_key', '');
+        if (!empty($google_api_key)) {
+            $response = $this->translate_with_google($text, 'ja', 'en', $google_api_key);
+            if (!is_wp_error($response)) {
+                $results['google'] = array(
+                    'translation' => $response['text'],
+                    'slug' => sanitize_title($response['text'])
+                );
+            }
+        }
+        
+        // 結果を返す
+        if (empty($results)) {
+            wp_send_json_error(array('message' => __('有効なAPIキーが設定されていないか、翻訳に失敗しました。', 'cn-translate-slugs')));
+        } else {
+            wp_send_json_success($results);
+        }
+    }
+    
+    /**
+     * 翻訳履歴クリアAJAXハンドラー
+     */
+    public function clear_translation_history_ajax() {
+        // nonce検証
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'cn_translate_slugs_nonce')) {
+            wp_send_json_error(array('message' => __('セキュリティチェックに失敗しました。', 'cn-translate-slugs')));
+        }
+        
+        // 履歴をクリア
+        update_option($this->translation_history_option, array());
+        wp_send_json_success();
+    }
+    
+    /**
+     * 翻訳統計リセットAJAXハンドラー
+     */
+    public function reset_translation_stats_ajax() {
+        // nonce検証
+        if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'cn_translate_slugs_nonce')) {
+            wp_send_json_error(array('message' => __('セキュリティチェックに失敗しました。', 'cn-translate-slugs')));
+        }
+        
+        // 統計をリセット
+        update_option($this->translation_stats_option, array());
+        wp_send_json_success();
+    }
+    
+    /**
      * 管理画面用のスタイルとスクリプトを読み込み
      */
     public function enqueue_admin_assets($hook) {

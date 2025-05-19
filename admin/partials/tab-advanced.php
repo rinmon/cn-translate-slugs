@@ -43,43 +43,6 @@ $romaji_hepburn = get_option('cn_translate_slugs_romaji_hepburn', 'yes');
     </div>
 </div>
 
-<!-- 翻訳ワークフロービルダー -->
-<div class="cn-card">
-    <div class="cn-card-header">
-        <h2 class="cn-card-title"><?php _e('翻訳ワークフロー', 'cn-translate-slugs'); ?></h2>
-        <p class="cn-card-description"><?php _e('ドラッグ&ドロップで翻訳ワークフローをカスタマイズできます。', 'cn-translate-slugs'); ?></p>
-    </div>
-    
-    <div class="cn-workflow-builder">
-        <div class="cn-workflow-container">
-            <div class="cn-workflow-start">
-                <span class="cn-icon-start"></span>
-                <span><?php _e('日本語タイトル', 'cn-translate-slugs'); ?></span>
-            </div>
-            
-            <div class="cn-workflow-steps" id="workflow-steps">
-                <!-- ここにJSでステップを追加 -->
-            </div>
-            
-            <div class="cn-workflow-end">
-                <span class="cn-icon-end"></span>
-                <span><?php _e('英語スラグ', 'cn-translate-slugs'); ?></span>
-            </div>
-        </div>
-        
-        <div class="cn-workflow-available-steps">
-            <div class="cn-workflow-step" draggable="true" data-step-type="translate">
-                <span class="cn-icon-translate"></span>
-                <span><?php _e('翻訳', 'cn-translate-slugs'); ?></span>
-            </div>
-            <div class="cn-workflow-step" draggable="true" data-step-type="filter">
-                <span class="cn-icon-filter"></span>
-                <span><?php _e('フィルター', 'cn-translate-slugs'); ?></span>
-            </div>
-        </div>
-    </div>
-</div>
-
 <!-- 翻訳ルールビルダー -->
 <div class="cn-card">
     <div class="cn-card-header">
