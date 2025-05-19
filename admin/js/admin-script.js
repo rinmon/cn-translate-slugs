@@ -141,7 +141,7 @@ jQuery(document).ready(function($) {
                 url: ajaxurl,
                 type: 'POST',
                 data: {
-                    action: 'cn_test_api_connection',
+                    action: 'cn_test_deepl_api',
                     provider: 'deepl',
                     api_key: apiKey,
                     api_type: apiType,
@@ -191,7 +191,7 @@ jQuery(document).ready(function($) {
                 url: ajaxurl,
                 type: 'POST',
                 data: {
-                    action: 'cn_test_api_connection',
+                    action: 'cn_test_' + provider + '_api',
                     provider: provider,
                     api_key: apiKey,
                     api_type: apiType,
