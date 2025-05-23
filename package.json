@@ -1,22 +1,19 @@
 {
   "name": "cn-translate-slugs",
   "version": "2.1.2",
-  "description": "WordPress plugin to translate Japanese titles to English slugs",
-  "private": true,
+  "type": "module",
   "scripts": {
-    "dev": "npx vite",
-    "build": "npx vite build",
-    "preview": "npx vite preview"
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
   },
   "dependencies": {
-    "chart.js": "^4.4.1",
-    "sortablejs": "^1.15.2"
+    "chart.js": "^4.4.1"
   },
   "devDependencies": {
+    "vite": "^5.0.10",
     "@vitejs/plugin-legacy": "^5.2.0",
     "autoprefixer": "^10.4.16",
-    "postcss": "^8.4.32",
-    "sass": "^1.69.5",
-    "vite": "^5.0.10"
+    "postcss": "^8.4.32"
   }
 }
