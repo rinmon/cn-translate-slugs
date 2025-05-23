@@ -1,0 +1,18 @@
+{
+  "name": "cn-translate-slugs",
+  "version": "2.1.2",
+  "description": "WordPress plugin to translate Japanese titles to English slugs",
+  "private": true,
+  "scripts": {
+    "dev": "vite",
+    "build": "vite build",
+    "preview": "vite preview"
+  },
+  "dependencies": {
+    "chart.js": "^4.4.1",
+    "sortablejs": "^1.15.2"
+  },
+  "devDependencies": {
+    "vite": "^5.0.10"
+  }
+}
