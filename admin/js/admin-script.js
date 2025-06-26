@@ -50,11 +50,6 @@ jQuery(document).ready(function($) {
                 var isActive = $activeList.find('li[data-provider="' + provider + '"]').length > 0;
                 // 対応するAPI設定フィールドの表示/非表示を切り替え
                 $('#cn_' + provider + '_api_key_fields').toggle(isActive);
-                
-                // DeepLの場合はAPI種類の設定も切り替える
-                if (provider === 'deepl') {
-                    $('#cn_deepl_api_type_fields').toggle(isActive);
-                }
             });
         }
         

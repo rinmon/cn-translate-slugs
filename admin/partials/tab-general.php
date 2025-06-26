@@ -197,39 +197,18 @@ function cn_display_api_key_field($provider_key, $provider_name, $option_name, $
                         <label for="cn_translate_slugs_deepl_api_key"><?php echo esc_html($all_providers['deepl']['name']); ?> <?php esc_html_e('APIキー', 'cn-translate-slugs'); ?></label>
                     </th>
                     <td>
-                        <input type="password" id="cn_translate_slugs_deepl_api_key" name="cn_translate_slugs_deepl_api_key" value="<?php echo esc_attr($api_key); ?>" class="regular-text">
+                        <div class="cn-api-key-field-wrapper">
+                            <input type="text" id="cn_translate_slugs_deepl_api_key" name="cn_translate_slugs_deepl_api_key" value="<?php echo esc_attr($api_key); ?>" class="regular-text cn-api-key-input">
+                            <button type="button" class="button cn-test-api-button" data-provider="deepl"><?php esc_html_e('テスト', 'cn-translate-slugs'); ?></button>
+                            <span class="cn-api-test-result"></span>
+                        </div>
                         <p class="description">
                             <?php printf(esc_html__('%sを使用するためのAPIキーを入力してください。', 'cn-translate-slugs'), esc_html($all_providers['deepl']['name'])); ?>
                         </p>
-                    </td>
-                </tr>
-            </table>
-        </div>
-        <?php
-        
-        // DeepL API Type selector (Free/Pro)
-        $is_active = isset($active_workflow_providers['deepl']);
-        $display_style = $is_active ? 'block' : 'none';
-        ?>
-        <div id="cn_deepl_api_type_fields" class="cn-provider-settings" style="display: <?php echo $display_style; ?>">
-            <table class="form-table">
-                <tr>
-                    <th scope="row">
-                        <label for="cn_translate_slugs_deepl_api_type"><?php esc_html_e('DeepL API種類', 'cn-translate-slugs'); ?></label>
-                    </th>
-                    <td>
-                        <fieldset>
-                            <legend class="screen-reader-text"><?php esc_html_e('DeepL API種類', 'cn-translate-slugs'); ?></legend>
-                            <label>
-                                <input type="radio" name="cn_translate_slugs_deepl_api_type" value="pro" <?php checked($api_type, 'pro'); ?>>
-                                <?php esc_html_e('Pro（有償版）', 'cn-translate-slugs'); ?>
-                            </label><br>
-                            <label>
-                                <input type="radio" name="cn_translate_slugs_deepl_api_type" value="free" <?php checked($api_type, 'free'); ?>>
-                                <?php esc_html_e('Free（無償版）', 'cn-translate-slugs'); ?>
-                            </label>
-                            <p class="description"><?php esc_html_e('DeepL APIの種類に合わせて選択してください。異なるAPIエンドポイントが使用されます。', 'cn-translate-slugs'); ?></p>
-                        </fieldset>
+                        <p class="description cn-api-note">
+                            <strong><?php esc_html_e('API種類の自動判定:', 'cn-translate-slugs'); ?></strong> 
+                            <?php esc_html_e('無償版（Free）のAPIキーは通常 ":fx" が含まれています。キーに基づいて適切なAPIエンドポイントが自動的に選択されます。', 'cn-translate-slugs'); ?>
+                        </p>
                     </td>
                 </tr>
             </table>

@@ -214,11 +214,12 @@ class CN_Translate_Slugs {
             return '';
         }
 
-        // APIタイプを取得
-        $api_type = get_option('cn_translate_slugs_deepl_api_type', 'pro');
+        // APIキーの形式から無料版か有料版かを判定
+        // 無料版は ':fx' を含むキーを使用
+        $is_free_api = (strpos($api_key, ':fx') !== false);
         
         // DeepL API エンドポイント（API種類によって切り替え）
-        if ($api_type === 'free') {
+        if ($is_free_api) {
             $api_url = 'https://api-free.deepl.com/v2/translate'; // 無償版
         } else {
             $api_url = 'https://api.deepl.com/v2/translate'; // 有償版（デフォルト）
