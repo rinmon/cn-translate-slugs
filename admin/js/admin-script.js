@@ -167,20 +167,26 @@ jQuery(document).ready(function($) {
         });
         
         // テストボタンクリック時のアクション
-        $('.cn-api-test-button').on('click', function() {
+        $('.cn-test-api-button').on('click', function() {
             var $button = $(this);
             var provider = $button.data('provider');
             var apiKey = $('#cn_translate_slugs_' + provider + '_api_key').val();
-            var apiType = provider === 'deepl' ? $('input[name="cn_translate_slugs_deepl_api_type"]:checked').val() : '';
-            var $resultContainer = $('#cn-' + provider + '-api-test-result');
+            var apiType = ''; // APIタイプはAPIキーの形式から自動判定されるため不要
+            var $resultContainer = $('#cn_' + provider + '_api_test_result');
+            var $statusIndicator = $('#cn_' + provider + '_api_status');
+            var $statusText = $('#cn_' + provider + '_api_status_text');
             
             if (!apiKey) {
-                $resultContainer.html('<span style="color: red;">APIキーを入力してください</span>');
+                $resultContainer.html('<div class="cn-api-error"><span class="dashicons dashicons-warning"></span>APIキーを入力してください</div>');
+                $statusIndicator.removeClass().addClass('cn-api-status cn-api-status-error');
+                $statusText.text('APIキーが未入力');
                 return;
             }
             
             $button.prop('disabled', true).text('テスト中...');
-            $resultContainer.html('<span style="color: #666;">接続テスト中...</span>');
+            $resultContainer.html('<div style="padding:6px 0;"><span class="dashicons dashicons-clock" style="color:#dba617;"></span> 接続テスト中...</div>');
+            $statusIndicator.removeClass().addClass('cn-api-status cn-api-status-checking');
+            $statusText.text('テスト中...');
             
             $.ajax({
                 url: ajaxurl,
@@ -194,33 +200,39 @@ jQuery(document).ready(function($) {
                 },
                 success: function(response) {
                     if (response.success) {
-                        $resultContainer.html('<span style="color: green;">接続成功！「' + response.data.translated_text + '」</span>');
+                        var apiTypeText = response.data.api_type === 'free' ? 
+                            '<span class="cn-api-type-badge cn-api-free">FREE</span>' : 
+                            '<span class="cn-api-type-badge cn-api-pro">PRO</span>';
                         
-                        // ステータスインジケーターも更新
-                        if (provider === 'deepl') {
-                            $('#cn-deepl-api-status').removeClass().addClass('cn-api-status cn-api-status-success');
-                            $('#cn-deepl-api-status').next('.cn-api-status-text').text('接続成功');
-                        }
+                        $resultContainer.html(
+                            '<div class="cn-api-success">' +
+                            '<span class="dashicons dashicons-yes-alt"></span>' +
+                            '接続成功: 「' + response.data.translated_text + '」 ' + apiTypeText +
+                            '</div>'
+                        );
+                        $statusIndicator.removeClass().addClass('cn-api-status cn-api-status-success');
+                        $statusText.text('接続成功 (' + (response.data.api_type === 'free' ? '無償版' : '有償版') + ')');
                     } else {
-                        $resultContainer.html('<span style="color: red;">接続エラー: ' + response.data.message + '</span>');
-                        
-                        // ステータスインジケーターも更新
-                        if (provider === 'deepl') {
-                            $('#cn-deepl-api-status').removeClass().addClass('cn-api-status cn-api-status-error');
-                            $('#cn-deepl-api-status').next('.cn-api-status-text').text('接続エラー');
-                        }
+                        $resultContainer.html(
+                            '<div class="cn-api-error">' +
+                            '<span class="dashicons dashicons-no-alt"></span>' +
+                            'エラー: ' + response.data.message +
+                            '</div>'
+                        );
+                        $statusIndicator.removeClass().addClass('cn-api-status cn-api-status-error');
+                        $statusText.text('接続エラー');
                     }
+                    $button.prop('disabled', false).text('テスト');
                 },
                 error: function() {
-                    $resultContainer.html('<span style="color: red;">サーバーエラーが発生しました</span>');
-                    
-                    // ステータスインジケーターも更新
-                    if (provider === 'deepl') {
-                        $('#cn-deepl-api-status').removeClass().addClass('cn-api-status cn-api-status-error');
-                        $('#cn-deepl-api-status').next('.cn-api-status-text').text('サーバーエラー');
-                    }
-                },
-                complete: function() {
+                    $resultContainer.html(
+                        '<div class="cn-api-error">' +
+                        '<span class="dashicons dashicons-warning"></span>' +
+                        'サーバーエラーが発生しました' +
+                        '</div>'
+                    );
+                    $statusIndicator.removeClass().addClass('cn-api-status cn-api-status-error');
+                    $statusText.text('サーバーエラー');
                     $button.prop('disabled', false).text('テスト');
                 }
             });
@@ -372,23 +384,95 @@ jQuery(document).ready(function($) {
         });
     }
     
-    // 各機能を初期化
-    initTabs();
-    initWorkflow();
-    initApiTest();
-    
-    // 翻訳テストページの場合のみ初期化
-    if ($('#title-preview-input').length) {
-        initTranslationTest();
+    // プロバイダーの有効/無効切り替え機能
+    function initProviderToggle() {
+        // 有効/無効切り替えのトグルスイッチ処理
+        $('.cn-provider-toggle').on('change', function() {
+            var $checkbox = $(this);
+            var provider = $checkbox.data('provider');
+            var isEnabled = $checkbox.is(':checked');
+            var $statusLabel = $('#cn_provider_status_' + provider);
+            
+            // ステータス表示を更新
+            if (isEnabled) {
+                $statusLabel.removeClass('cn-disabled').addClass('cn-enabled').text('有効');
+            } else {
+                $statusLabel.removeClass('cn-enabled').addClass('cn-disabled').text('無効');
+            }
+            
+            // 無効なプロバイダーはワークフローから削除
+            if (!isEnabled) {
+                $('#cn-active-workflow-list li[data-provider="' + provider + '"]').remove();
+                $('#cn-available-provider-list').append(
+                    '<li class="cn-workflow-step" data-provider="' + provider + '">' +
+                    '<span class="dashicons ' + $('#cn-available-provider-list').find('[data-provider="' + provider + '"]').find('.dashicons').attr('class').split(' ')[1] + '"></span>' +
+                    '<span class="cn-provider-name">' + $('#cn_provider_status_' + provider).closest('tr').find('th').text() + '</span>' +
+                    '</li>'
+                );
+                
+                // ワークフロー更新
+                var workflow = [];
+                $('#cn-active-workflow-list li:not(.cn-empty-list-placeholder)').each(function() {
+                    workflow.push({
+                        provider: $(this).data('provider')
+                    });
+                });
+                $('#cn_translate_slugs_workflow_input').val(JSON.stringify(workflow));
+                
+                // 空のワークフローをチェック
+                if ($('#cn-active-workflow-list li:not(.cn-empty-list-placeholder)').length === 0) {
+                    $('#cn-active-workflow-list').html('<li class="cn-empty-list-placeholder">利用可能なプロバイダーからドラッグしてください</li>');
+                }
+            }
+            
+            // ワークフロービルダーを更新
+            updateWorkflowBuilderState();
+        });
+        
+        // ワークフロービルダーの状態更新
+        function updateWorkflowBuilderState() {
+            // 無効なプロバイダーが利用可能リストにある場合は非表示に
+            $('#cn-available-provider-list li').each(function() {
+                var provider = $(this).data('provider');
+                var isEnabled = $('#cn_provider_enabled_' + provider).is(':checked');
+                $(this).toggle(isEnabled);
+            });
+        }
+        
+        // 初期状態でワークフロービルダーを更新
+        updateWorkflowBuilderState();
     }
-    
-    // 比較機能の初期化
-    if ($('#compare-button').length) {
-        initCompareFunction();
-    }
-    
-    // 履歴クリア機能の初期化
-    if ($('#clear-history-button').length) {
-        initClearHistoryFunction();
-    }
+
+    // ページ読み込み時の初期化処理
+    $(document).ready(function() {
+        // 各タブの初期化
+        initTabs();
+        
+        // 各機能の初期化
+        if ($('#cn-workflow-tab').length) {
+            // ワークフロー設定画面の初期化
+            initWorkflow();
+            
+            // プロバイダーの有効/無効切り替え機能の初期化
+            initProviderToggle();
+        }
+        
+        // APIテスト機能の初期化
+        initApiTest();
+        
+        // 翻訳テスト機能の初期化
+        if ($('#cn-test-tab').length) {
+            initTranslationTest();
+        }
+        
+        // 比較機能の初期化
+        if ($('#compare-button').length) {
+            initCompareFunction();
+        }
+        
+        // 履歴クリア機能の初期化
+        if ($('#clear-history-button').length) {
+            initClearHistoryFunction();
+        }
+    });
 });

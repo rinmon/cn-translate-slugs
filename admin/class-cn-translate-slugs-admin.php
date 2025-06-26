@@ -533,7 +533,35 @@ class CN_Translate_Slugs_Admin {
         }
         
         $text = sanitize_text_field($_POST['text']);
-        $provider = get_option('cn_translate_slugs_provider', 'deepl');
+    
+    // 有効なプロバイダーのリストを取得
+    $enabled_providers = get_option('cn_translate_slugs_enabled_providers', array('deepl'));
+    
+    // ワークフローから現在有効なプロバイダーを取得
+    $workflow = json_decode(get_option('cn_translate_slugs_workflow', '[]'), true);
+    
+    // ワークフローが空、またはすべてのプロバイダーが無効の場合はDeepLを使用
+    if (empty($workflow)) {
+        $provider = in_array('deepl', $enabled_providers) ? 'deepl' : '';
+    } else {
+        // ワークフロー内の有効なプロバイダーを検索
+        $provider = '';
+        foreach ($workflow as $step) {
+            if (isset($step['provider']) && in_array($step['provider'], $enabled_providers)) {
+                $provider = $step['provider'];
+                break;
+            }
+        }
+        // 有効なプロバイダーが見つからなかった場合、DeepLを使用（有効な場合）
+        if (empty($provider) && in_array('deepl', $enabled_providers)) {
+            $provider = 'deepl';
+        }
+    }
+    
+    // 有効なプロバイダーが見つからなかった場合
+    if (empty($provider)) {
+        wp_send_json_error(array('message' => __('有効な翻訳プロバイダーが設定されていません。プラグイン設定画面で少なくとも1つのプロバイダーを有効にしてください。', 'cn-translate-slugs')));
+    }
         
         // プロバイダーに応じた翻訳処理
         $result = array();
@@ -697,7 +725,7 @@ class CN_Translate_Slugs_Admin {
         wp_enqueue_script(
             'cn-translate-slugs-admin',
             CN_TRANSLATE_SLUGS_PLUGIN_URL . 'admin/js/admin-script.js',
-            array('jquery'),
+            array('jquery', 'jquery-ui-sortable'),
             CN_TRANSLATE_SLUGS_VERSION,
             true
         );

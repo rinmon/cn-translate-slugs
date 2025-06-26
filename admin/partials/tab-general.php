@@ -16,7 +16,15 @@ $api_type = get_option('cn_translate_slugs_deepl_api_type', 'pro');
 $google_api_key = get_option('cn_translate_slugs_google_api_key', '');
 $microsoft_api_key = get_option('cn_translate_slugs_microsoft_api_key', '');
 $auto_retranslate = get_option('cn_translate_slugs_auto_retranslate', 'no');
-$translation_provider = get_option('cn_translate_slugs_provider', 'deepl'); // This might become obsolete or used as default
+
+// プロバイダーごとの有効/無効設定を取得
+$enabled_providers = get_option('cn_translate_slugs_enabled_providers', ['deepl' => 'on']);
+
+// デフォルトではDeepLのみ有効
+if (empty($enabled_providers)) {
+    $enabled_providers = ['deepl' => 'on'];
+    update_option('cn_translate_slugs_enabled_providers', $enabled_providers);
+}
 
 // デフォルトでDeepLを含むワークフローを設定
 $default_workflow = json_encode([['provider' => 'deepl']]);
@@ -92,6 +100,7 @@ foreach ($all_providers as $key => $provider) {
 <div class="cn-section">
     <h3><?php esc_html_e('翻訳ワークフロー', 'cn-translate-slugs'); ?></h3>
     <p><?php esc_html_e('使用する翻訳プロバイダーを順番にドラッグ＆ドロップで設定します。上から順に試行されます。', 'cn-translate-slugs'); ?></p>
+    <p><?php esc_html_e('注意: 有効なプロバイダーのみがワークフローに追加されます。下部のプロバイダー有効化セクションでプロバイダーを有効/無効にできます。', 'cn-translate-slugs'); ?></p>
 
     <div class="cn-workflow-builder">
         <div class="cn-workflow-area cn-workflow-active">
@@ -136,6 +145,34 @@ foreach ($all_providers as $key => $provider) {
      <input type="hidden" id="cn_translate_slugs_workflow_input" name="cn_translate_slugs_workflow" value="<?php echo esc_attr($workflow_json); ?>">
 </div>
 
+<div class="cn-section">
+    <h3><?php esc_html_e('プロバイダー有効化', 'cn-translate-slugs'); ?></h3>
+    <p><?php esc_html_e('翻訳に使用するプロバイダーを有効または無効にします。無効にしたプロバイダーはワークフローに追加できません。', 'cn-translate-slugs'); ?></p>
+    
+    <table class="form-table">
+        <?php foreach ($all_providers as $key => $provider): ?>
+        <tr>
+            <th scope="row"><?php echo esc_html($provider['name']); ?></th>
+            <td>
+                <label class="cn-toggle-switch">
+                    <input type="checkbox" name="cn_translate_slugs_enabled_providers[<?php echo esc_attr($key); ?>]" 
+                           id="cn_provider_enabled_<?php echo esc_attr($key); ?>" 
+                           value="on" <?php checked(isset($enabled_providers[$key]) && $enabled_providers[$key] === 'on'); ?> 
+                           class="cn-provider-toggle" 
+                           data-provider="<?php echo esc_attr($key); ?>">
+                    <span class="cn-toggle-slider"></span>
+                </label>
+                <span class="cn-toggle-label <?php echo isset($enabled_providers[$key]) && $enabled_providers[$key] === 'on' ? 'cn-enabled' : 'cn-disabled'; ?>"
+                      id="cn_provider_status_<?php echo esc_attr($key); ?>">
+                    <?php echo isset($enabled_providers[$key]) && $enabled_providers[$key] === 'on' ? esc_html__('有効', 'cn-translate-slugs') : esc_html__('無効', 'cn-translate-slugs'); ?>
+                </span>
+                <p class="description"><?php echo esc_html($provider['description']); ?></p>
+            </td>
+        </tr>
+        <?php endforeach; ?>
+    </table>
+</div>
+
 <?php
 /**
  * Helper function to display API key fields
@@ -153,7 +190,7 @@ function cn_display_api_key_field($provider_key, $provider_name, $option_name, $
     $is_active = ($provider_key === 'deepl') || isset($active_workflow_providers[$provider_key]);
     $display_style = $is_active ? 'block' : 'none';
     ?>
-    <div id="cn_<?php echo esc_attr($provider_key); ?>_fields" class="cn-provider-settings" style="display: <?php echo $display_style; ?>;">
+    <div id="cn_<?php echo esc_attr($provider_key); ?>_fields" class="cn-provider-settings" style="display: <?php echo $display_style; ?>">
         <table class="form-table">
             <tr>
                 <th scope="row">
@@ -163,7 +200,11 @@ function cn_display_api_key_field($provider_key, $provider_name, $option_name, $
                     <div class="cn-api-key-field-wrapper">
                         <input type="text" id="<?php echo esc_attr($option_name); ?>" name="<?php echo esc_attr($option_name); ?>" value="<?php echo esc_attr($current_value); ?>" class="regular-text cn-api-key-input">
                         <button type="button" class="button cn-test-api-button" data-provider="<?php echo esc_attr($provider_key); ?>"><?php esc_html_e('テスト', 'cn-translate-slugs'); ?></button>
-                        <span class="cn-api-test-result"></span>
+                    </div>
+                    <div class="cn-api-test-result" id="cn_<?php echo esc_attr($provider_key); ?>_api_test_result"></div>
+                    <div class="cn-api-status-indicator">
+                        <span class="cn-api-status cn-api-status-empty" id="cn_<?php echo esc_attr($provider_key); ?>_api_status"></span>
+                        <span class="cn-api-status-text" id="cn_<?php echo esc_attr($provider_key); ?>_api_status_text"><?php esc_html_e('未確認', 'cn-translate-slugs'); ?></span>
                     </div>
                     <p class="description">
                         <?php
@@ -200,7 +241,11 @@ function cn_display_api_key_field($provider_key, $provider_name, $option_name, $
                         <div class="cn-api-key-field-wrapper">
                             <input type="text" id="cn_translate_slugs_deepl_api_key" name="cn_translate_slugs_deepl_api_key" value="<?php echo esc_attr($api_key); ?>" class="regular-text cn-api-key-input">
                             <button type="button" class="button cn-test-api-button" data-provider="deepl"><?php esc_html_e('テスト', 'cn-translate-slugs'); ?></button>
-                            <span class="cn-api-test-result"></span>
+                        </div>
+                        <div class="cn-api-test-result" id="cn_deepl_api_test_result"></div>
+                        <div class="cn-api-status-indicator">
+                            <span class="cn-api-status cn-api-status-empty" id="cn_deepl_api_status"></span>
+                            <span class="cn-api-status-text" id="cn_deepl_api_status_text"><?php esc_html_e('未確認', 'cn-translate-slugs'); ?></span>
                         </div>
                         <p class="description">
                             <?php printf(esc_html__('%sを使用するためのAPIキーを入力してください。', 'cn-translate-slugs'), esc_html($all_providers['deepl']['name'])); ?>

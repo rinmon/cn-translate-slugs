@@ -3,7 +3,7 @@
  * Plugin Name: CN Translate Slugs
  * Plugin URI: https://chotto.news
  * Description: 日本語の投稿タイトルをDeepL APIを使って英語に翻訳し、パーマリンクとして使用します
- * Version:           2.1.2
+ * Version:           2.2.0
  * Author: rinmon
  * Author URI: https://chotto.news
  * Text Domain: cn-translate-slugs
@@ -19,7 +19,7 @@ if (!defined('ABSPATH')) {
 }
 
 // Define plugin constants
-define('CN_TRANSLATE_SLUGS_VERSION', '2.1.2');
+define('CN_TRANSLATE_SLUGS_VERSION', '2.2.0');
 define('CN_TRANSLATE_SLUGS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CN_TRANSLATE_SLUGS_PLUGIN_URL', plugin_dir_url(__FILE__));
 
@@ -67,8 +67,8 @@ function cn_translate_slugs_deactivate() {
  */
 function cn_translate_slugs_test_api_ajax() {
     // nonceチェック
-    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'cn_test_deepl_api_nonce')) {
-        wp_send_json_error(__('Security check failed.', 'cn-translate-slugs'));
+    if (!isset($_POST['nonce']) || !wp_verify_nonce($_POST['nonce'], 'cn_translate_slugs_nonce')) {
+        wp_send_json_error(array('message' => __('Security check failed.', 'cn-translate-slugs')));
     }
     
     // APIキーを取得
