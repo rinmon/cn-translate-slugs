@@ -69,8 +69,6 @@ class CN_Translate_Slugs_Admin {
         // 投稿タイプが post または page のみ対象
         if (!in_array($post->post_type, array('post', 'page'))) return;
 
-        // 既にスラッグが手動で設定されていれば何もしない
-        if (!empty($post->post_name)) return;
 
         // タイトルが空なら何もしない
         if (empty($post->post_title)) return;
