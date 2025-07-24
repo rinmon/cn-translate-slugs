@@ -59,6 +59,37 @@ class CN_Translate_Slugs_Admin {
     }
 
     /**
+     * 投稿保存時にタイトルを英語スラッグに自動変換
+     *
+     * @param int     $post_ID
+     * @param WP_Post $post
+     * @param bool    $update
+     */
+    public function translate_slug_on_save($post_ID, $post, $update) {
+        // 投稿タイプが post または page のみ対象
+        if (!in_array($post->post_type, array('post', 'page'))) return;
+
+        // 既にスラッグが手動で設定されていれば何もしない
+        if (!empty($post->post_name)) return;
+
+        // タイトルが空なら何もしない
+        if (empty($post->post_title)) return;
+
+        // DeepLで翻訳
+        $result = $this->translate_with_deepl($post->post_title, 'JA', 'EN');
+        if (is_wp_error($result)) return;
+
+        $slug = sanitize_title($result['text']);
+        // 無限ループ防止のため一時的にフックを外す
+        remove_action('save_post', array($this, 'translate_slug_on_save'), 10);
+        wp_update_post(array(
+            'ID' => $post_ID,
+            'post_name' => $slug,
+        ));
+        add_action('save_post', array($this, 'translate_slug_on_save'), 10, 3);
+    }
+
+    /**
      * 管理メニューを追加
      */
     public function add_admin_menu() {
@@ -249,7 +280,7 @@ class CN_Translate_Slugs_Admin {
                     data: {
                         action: 'cn_test_deepl_api',
                         api_key: apiKey,
-                        nonce: '<?php echo wp_create_nonce('cn_test_deepl_api_nonce'); ?>'
+                        nonce: cn_translate_slugs.nonce
                     },
                     success: function(response) {
                         if (response.success) {
@@ -278,6 +309,50 @@ class CN_Translate_Slugs_Admin {
         
         // 設定ダッシュボードを表示
         include CN_TRANSLATE_SLUGS_PLUGIN_DIR . 'admin/partials/settings-dashboard.php';
+    }
+    
+    /**
+     * DeepL APIをテストするAJAXハンドラー
+     */
+    public function test_deepl_api_ajax() {
+        check_ajax_referer('cn_translate_slugs_nonce', 'nonce');
+
+        // APIキーの取得 (POSTデータ -> 保存されたオプション)
+        $api_key = isset($_POST['api_key']) ? sanitize_text_field($_POST['api_key']) : '';
+        if (empty($api_key)) {
+            $api_key = get_option('cn_translate_slugs_deepl_api_key', '');
+        }
+
+        // APIキーの存在チェック
+        if (empty($api_key)) {
+            wp_send_json_error([
+                'message' => __('DeepL APIキーが設定されていません。', 'cn-translate-slugs')
+            ]);
+        }
+
+        // テスト用のテキスト
+        $test_text = __('これはテスト翻訳です。', 'cn-translate-slugs');
+        $source_lang = 'JA';
+        $target_lang = 'EN';
+
+        // 翻訳の実行
+        $result = $this->translate_with_deepl($test_text, $source_lang, $target_lang, $api_key);
+
+        if (is_wp_error($result)) {
+            wp_send_json_error([
+                'message' => $result->get_error_message()
+            ]);
+        }
+
+        // 翻訳が成功した場合
+        $translated_text = $result['text'];
+        $api_type = (strpos($api_key, ':fx') !== false) ? 'free' : 'pro';
+        
+        wp_send_json_success([
+            'message' => sprintf(__('接続テスト成功！「%s」は「%s」と翻訳されました。', 'cn-translate-slugs'), $test_text, $translated_text),
+            'translated_text' => $translated_text,
+            'api_type' => $api_type
+        ]);
     }
     
     /**
@@ -387,10 +462,25 @@ class CN_Translate_Slugs_Admin {
             return new WP_Error('api_error', $error_message);
         }
         
+        // レスポンスボディを取得
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+        
+        // 翻訳結果がない場合
+        if (!isset($data['translations'][0]['text'])) {
+            return new WP_Error('api_response_error', __('DeepL APIからの応答に翻訳データが含まれていません。', 'cn-translate-slugs'));
+        }
+        
         // 翻訳統計を更新
         $this->update_translation_stats('deepl', strlen($text));
         
-        return $response;
+        // 必要な形式で返す
+        return array(
+            'text' => $data['translations'][0]['text'],
+            'source_lang' => $source_lang,
+            'target_lang' => $target_lang,
+            'raw_response' => $data
+        );
     }
     
     /**
@@ -449,10 +539,25 @@ class CN_Translate_Slugs_Admin {
             return new WP_Error('api_error', $error_message);
         }
 
+        // レスポンスボディを取得
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+        
+        // 翻訳結果がない場合
+        if (!isset($data['data']['translations'][0]['translatedText'])) {
+            return new WP_Error('api_response_error', __('Google Cloud APIからの応答に翻訳データが含まれていません。', 'cn-translate-slugs'));
+        }
+        
         // 翻訳統計を更新
         $this->update_translation_stats('google', mb_strlen($text, 'UTF-8')); // 文字数を正しくカウントするため mb_strlen を使用
-
-        return $response;
+    
+        // 必要な形式で返す
+        return array(
+            'text' => $data['data']['translations'][0]['translatedText'],
+            'source_lang' => $source_lang,
+            'target_lang' => $target_lang,
+            'raw_response' => $data
+        );
     }
     
     /**

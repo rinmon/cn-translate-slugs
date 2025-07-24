@@ -111,11 +111,11 @@ if (!defined('ABSPATH')) {
                     $history = array_slice($history, -10, 10, true);
                     foreach ($history as $item) {
                         echo '<tr>';
-                        echo '<td>' . esc_html($item['date']) . '</td>';
-                        echo '<td>' . esc_html($item['original']) . '</td>';
-                        echo '<td>' . esc_html($item['translation']) . '</td>';
-                        echo '<td>' . esc_html($item['slug']) . '</td>';
-                        echo '<td>' . esc_html($item['post_type']) . '</td>';
+                        echo '<td>' . (isset($item['date']) ? esc_html($item['date']) : '') . '</td>';
+                        echo '<td>' . (isset($item['original']) ? esc_html($item['original']) : '') . '</td>';
+                        echo '<td>' . (isset($item['translation']) ? esc_html($item['translation']) : '') . '</td>';
+                        echo '<td>' . (isset($item['slug']) ? esc_html($item['slug']) : '') . '</td>';
+                        echo '<td>' . (isset($item['post_type']) ? esc_html($item['post_type']) : '') . '</td>';
                         echo '</tr>';
                     }
                 }
