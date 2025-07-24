@@ -669,7 +669,6 @@ class CN_Translate_Slugs_Admin {
         // プロバイダーに応じた翻訳処理
         $result = array();
         $translated_text = '';
-        
         switch ($provider) {
             case 'deepl':
                 $api_key = get_option('cn_translate_slugs_deepl_api_key', '');
@@ -727,7 +726,7 @@ class CN_Translate_Slugs_Admin {
             'translation' => $translated_text,
             'slug' => $slug,
             'provider' => $provider
-        ));
+        )); // 必ずUIが期待する形式で返す
     }
     
     /**
