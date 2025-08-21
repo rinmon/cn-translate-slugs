@@ -82,21 +82,23 @@ class CN_Translate_Slugs_Admin {
             // WordPress標準のsanitize_title()を使用してスラッグを生成
             $slug = sanitize_title($translated);
             
-            // 使用された翻訳方法を取得
-            $translation_method = get_option('cn_translate_slugs_translation_method', 'mymemory');
-            $method_names = array(
-                'mymemory' => 'MyMemory API',
-                'romaji' => 'ローマ字変換',
-                'local_dictionary' => 'ローカル辞書'
-            );
-            
             wp_send_json_success(array(
                 'translation' => $translated,
                 'slug' => $slug,
-                'method' => $method_names[$translation_method] ?? $translation_method
+                'method' => 'MyMemory API'
             ));
         } else {
-            wp_send_json_error(array('message' => '翻訳に失敗しました。'));
+            // MyMemory APIが失敗した場合はローマ字変換にフォールバック
+            $romaji_slug = $this->simple_romaji_convert($text);
+            if (!empty($romaji_slug)) {
+                wp_send_json_success(array(
+                    'translation' => $romaji_slug,
+                    'slug' => sanitize_title($romaji_slug),
+                    'method' => 'ローマ字変換（フォールバック）'
+                ));
+            } else {
+                wp_send_json_error(array('message' => '翻訳に失敗しました。'));
+            }
         }
     }
 
@@ -107,9 +109,9 @@ class CN_Translate_Slugs_Admin {
         // MyMemory API エンドポイント（無料）
         $api_url = 'https://api.mymemory.translated.net/get';
         
-        // リクエストパラメータ
+        // リクエストパラメータ（URLエンコードしない）
         $params = array(
-            'q' => urlencode($text),
+            'q' => $text,
             'langpair' => 'ja|en'
         );
 
@@ -118,9 +120,10 @@ class CN_Translate_Slugs_Admin {
 
         // APIリクエスト
         $response = wp_remote_get($url, array(
-            'timeout' => 10,
+            'timeout' => 15,
             'headers' => array(
-                'User-Agent' => 'CN Translate Slugs WordPress Plugin/3.0.6'
+                'User-Agent' => 'CN Translate Slugs WordPress Plugin/3.1.0',
+                'Accept' => 'application/json'
             )
         ));
 
@@ -142,6 +145,11 @@ class CN_Translate_Slugs_Admin {
         if (isset($data['responseData']['translatedText'])) {
             $translated = trim($data['responseData']['translatedText']);
             
+            // 日本語文字が含まれている場合は翻訳失敗とみなす
+            if (preg_match('/[\x{3040}-\x{309F}\x{30A0}-\x{30FF}\x{4E00}-\x{9FAF}]/u', $translated)) {
+                return '';
+            }
+            
             // 翻訳が元のテキストと同じ場合は空文字を返す（翻訳失敗とみなす）
             if ($translated === $text || empty($translated)) {
                 return '';
@@ -151,6 +159,18 @@ class CN_Translate_Slugs_Admin {
         }
 
         return '';
+    }
+
+    /**
+     * シンプルなローマ字変換
+     */
+    private function simple_romaji_convert($text) {
+        // 基本的なローマ字変換（簡易版）
+        $text = str_replace(array('こんにちは', 'こんばんは', 'おはよう'), array('konnichiwa', 'konbanwa', 'ohayou'), $text);
+        $text = str_replace(array('です', 'ます', 'でしょう'), array('desu', 'masu', 'deshou'), $text);
+        $text = preg_replace('/[^\w\s-]/', '', $text);
+        $text = preg_replace('/\s+/', '-', trim($text));
+        return strtolower($text);
     }
 
     /**
