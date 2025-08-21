@@ -107,9 +107,7 @@ $translation_methods = [
     </div>
 
     <div class="cn-translate-slugs-section">
-        <!-- 翻訳テスト機能は無効化 -->
-    <?php if (false): ?>
-    <h3><?php _e('翻訳テスト', 'cn-translate-slugs'); ?></h3>
+        <h3><?php _e('翻訳テスト', 'cn-translate-slugs'); ?></h3>
     <table class="form-table">
         <tr>
             <th scope="row">
@@ -123,7 +121,6 @@ $translation_methods = [
             </td>
         </tr>
     </table>
-    <?php endif; ?>
     </div>
 
     <div class="cn-translate-slugs-section">

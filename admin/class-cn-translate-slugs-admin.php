@@ -75,11 +75,8 @@ class CN_Translate_Slugs_Admin {
             return;
         }
         
-        // 翻訳プラグインのインスタンスを取得
-        $translator = new CN_Translate_Slugs();
-        
-        // 翻訳を実行（日本語から英語へ）
-        $translated = $translator->translate_slug($text);
+        // MyMemory APIで直接翻訳を実行
+        $translated = $this->test_translate_with_mymemory($text);
         
         if (!empty($translated)) {
             // スラッグ用に小文字化し、スペースをハイフンに変換
@@ -101,6 +98,59 @@ class CN_Translate_Slugs_Admin {
         } else {
             wp_send_json_error(array('message' => '翻訳に失敗しました。'));
         }
+    }
+
+    /**
+     * テスト用のMyMemory API翻訳メソッド
+     */
+    private function test_translate_with_mymemory($text) {
+        // MyMemory API エンドポイント（無料）
+        $api_url = 'https://api.mymemory.translated.net/get';
+        
+        // リクエストパラメータ
+        $params = array(
+            'q' => urlencode($text),
+            'langpair' => 'ja|en'
+        );
+
+        // URLを構築
+        $url = $api_url . '?' . http_build_query($params);
+
+        // APIリクエスト
+        $response = wp_remote_get($url, array(
+            'timeout' => 10,
+            'headers' => array(
+                'User-Agent' => 'CN Translate Slugs WordPress Plugin/3.0.6'
+            )
+        ));
+
+        // エラーチェック
+        if (is_wp_error($response)) {
+            return '';
+        }
+
+        $response_code = wp_remote_retrieve_response_code($response);
+        if ($response_code !== 200) {
+            return '';
+        }
+
+        // レスポンスを解析
+        $body = wp_remote_retrieve_body($response);
+        $data = json_decode($body, true);
+
+        // 翻訳テキストを取得
+        if (isset($data['responseData']['translatedText'])) {
+            $translated = trim($data['responseData']['translatedText']);
+            
+            // 翻訳が元のテキストと同じ場合は空文字を返す（翻訳失敗とみなす）
+            if ($translated === $text || empty($translated)) {
+                return '';
+            }
+            
+            return $translated;
+        }
+
+        return '';
     }
 
     /**

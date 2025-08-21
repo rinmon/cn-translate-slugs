@@ -1,27 +1,22 @@
 # CN Translate Slugs
 
-[![Version](https://img.shields.io/badge/version-2.2.3-blue.svg)](https://github.com/rinmon/cn-translate-slugs/releases)
+[![Version](https://img.shields.io/badge/version-3.0.8-blue.svg)](https://github.com/rinmon/cn-translate-slugs/releases)
 [![WordPress](https://img.shields.io/badge/wordpress-5.0%2B-green.svg)](https://wordpress.org/)
 [![License](https://img.shields.io/badge/license-GPL--2.0%2B-orange.svg)](https://www.gnu.org/licenses/gpl-2.0.html)
 
-WordPressの日本語記事タイトルを英語のパーマリンク（スラッグ）に自動変換するプラグインです。DeepL APIを使用して高品質な翻訳を提供します。
+WordPressの日本語記事タイトルを英語のパーマリンク（スラッグ）に自動変換するプラグインです。無料の翻訳サービスを使用して高品質な翻訳を提供します。
 
 ## 機能
 
 - 日本語の投稿タイトルを自動的に英語に翻訳
 - 翻訳された英語をパーマリンク（スラッグ）として使用
-- 複数の翻訳プロバイダーに対応
-  - DeepL API（主要な翻訳エンジン）
-  - Google Cloud Translation API
-  - Microsoft Translator API
+- 無料翻訳サービスに対応
+  - MyMemory API（無料翻訳サービス）
+  - ローマ字変換機能（フォールバック）
   - ローカル辞書による翻訳
-  - ローマ字変換機能
-- **翻訳プロバイダーの有効/無効を個別に切り替え可能**
-- デフォルトでDeepLのみにおける安定動作
-- 管理画面で各APIキーを簡単に設定可能
-- APIキー接続テスト機能
-- 翻訳ワークフローのカスタマイズ機能
-- 翻訳統計とモニタリング機能
+- シンプルで使いやすい管理画面
+- 自動再翻訳設定
+- 対象投稿タイプの選択機能
 
 ## インストール方法
 
@@ -44,29 +39,25 @@ cd /path/to/wordpress/wp-content/plugins/
 git clone https://github.com/rinmon/cn-translate-slugs.git
 ```
 
-## APIキーの取得方法
+## 設定について
 
-### DeepL APIキー（主要な翻訳プロバイダー）
+このプラグインは無料の翻訳サービスを使用するため、APIキーの設定は不要です。
 
-1. [DeepL API](https://www.deepl.com/pro-api) にアクセスし、アカウントを作成します
-2. 無料プラン（Free）または有料プラン（Pro）を選択します
-   - 無料プランは月間500,000文字までの制限があります
-   - パーマリンク翻訳の場合は、一般的に無料プランで十分です
-3. アカウント設定ページからAPIキーを取得します
+### 翻訳方法
 
-### 他の翻訳プロバイダーAPIキー（オプション）
-
-- **Google Cloud Translation API**: [Google Cloud Console](https://console.cloud.google.com/) から取得できます
-- **Microsoft Translator API**: [Azure Portal](https://portal.azure.com/) の言語サービスから取得できます
+- **MyMemory API**: 無料の翻訳サービス（1日1000リクエスト制限）
+- **ローマ字変換**: 日本語をローマ字に変換（フォールバック機能）
+- **ローカル辞書**: 独自の単語辞書による翻訳
 
 ## 使用方法
 
 ### 初期設定
 
 1. WordPress管理画面の「設定」→「CN Translate Slugs」から設定画面を開きます
-2. DeepL APIキーを入力し、「接続テスト」ボタンをクリックして接続を確認します
-3. 必要に応じて各翻訳プロバイダーのAPIキーを設定します
-4. 翻訳ワークフローを設定することで、複数の翻訳方法を使用する順序を決定できます
+2. 翻訳方法を選択します（デフォルト: MyMemory API）
+3. フォールバック翻訳方法を選択します（デフォルト: ローマ字変換）
+4. 翻訳を適用する投稿タイプを選択します
+5. 自動再翻訳の設定を行います
 
 ### 実際の使用
 
@@ -76,11 +67,10 @@ git clone https://github.com/rinmon/cn-translate-slugs.git
 
 ## 注意事項
 
-### API使用上の注意
+### 使用上の注意
 
-- **DeepL API**: 無料プランは月間500,000文字までの制限があります
-- **Google Cloud Translation API**: 月間500,000文字まで無料ですが、クレジットカード登録が必要です
-- **Microsoft Translator API**: 無料ティアには月饮2百万文字の制限があります
+- **MyMemory API**: 1日1000リクエストまでの制限があります（無料）
+- APIキーの設定は不要です
 
 ### 動作上の注意
 
