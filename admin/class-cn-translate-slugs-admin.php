@@ -79,8 +79,8 @@ class CN_Translate_Slugs_Admin {
         $translated = $this->test_translate_with_mymemory($text);
         
         if (!empty($translated)) {
-            // スラッグ用に小文字化し、スペースをハイフンに変換
-            $slug = strtolower(str_replace(' ', '-', trim($translated)));
+            // WordPress標準のsanitize_title()を使用してスラッグを生成
+            $slug = sanitize_title($translated);
             
             // 使用された翻訳方法を取得
             $translation_method = get_option('cn_translate_slugs_translation_method', 'mymemory');
