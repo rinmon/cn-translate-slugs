@@ -189,7 +189,7 @@ class CN_Translate_Slugs_Admin {
         }
         
         // 日本語タイトルかチェック
-        if (!$this->is_japanese($post->post_title)) {
+        if (!$this->contains_japanese($post->post_title)) {
             return;
         }
         
@@ -683,6 +683,16 @@ class CN_Translate_Slugs_Admin {
             'target_lang' => $target_lang,
             'raw_response' => $data
         );
+    }
+    
+    /**
+     * 日本語文字が含まれているかチェック
+     * 
+     * @param string $text チェックするテキスト
+     * @return bool 日本語文字が含まれている場合true
+     */
+    private function contains_japanese($text) {
+        return preg_match('/[\x{3040}-\x{309F}\x{30A0}-\x{30FF}\x{4E00}-\x{9FAF}]/u', $text);
     }
     
     /**

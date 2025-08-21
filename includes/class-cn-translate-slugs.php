@@ -55,13 +55,13 @@ class CN_Translate_Slugs {
         $auto_retranslate = get_option('cn_translate_slugs_auto_retranslate', 'no');
         
         // 自動再翻訳が「いいえ」で、ユーザーが明示的にスラッグを設定した場合はスキップ
-        $custom_slug = filter_input(INPUT_POST, 'post_name', FILTER_SANITIZE_STRING);
+        $custom_slug = filter_input(INPUT_POST, 'post_name', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         if ($auto_retranslate === 'no' && !empty($custom_slug)) {
             return $slug;
         }
 
         // 投稿タイトルを取得
-        $title = filter_input(INPUT_POST, 'post_title', FILTER_SANITIZE_STRING);
+        $title = filter_input(INPUT_POST, 'post_title', FILTER_SANITIZE_FULL_SPECIAL_CHARS);
         if (empty($title)) {
             return $slug;
         }

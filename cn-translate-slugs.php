@@ -3,7 +3,7 @@
  * Plugin Name: CN Translate Slugs
  * Plugin URI: https://github.com/rinmon/cn-translate-slugs
  * Description: 日本語の投稿タイトルを自動的に英語に翻訳し、SEOに最適化されたパーマリンクを生成します。無料の翻訳サービスを使用。
- * Version:           3.1.2
+ * Version:           3.1.3
  * Author: RINMON
  * Author URI: https://chotto.news
  * License: GPL v2 or later
@@ -23,7 +23,7 @@ if (!defined('ABSPATH')) {
 }
 
 // プラグイン定数の定義
-define('CN_TRANSLATE_SLUGS_VERSION', '3.1.2');
+define('CN_TRANSLATE_SLUGS_VERSION', '3.1.3');
 define('CN_TRANSLATE_SLUGS_PLUGIN_DIR', plugin_dir_path(__FILE__));
 define('CN_TRANSLATE_SLUGS_PLUGIN_URL', plugin_dir_url(__FILE__));
 
