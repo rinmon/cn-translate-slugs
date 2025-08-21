@@ -445,10 +445,10 @@ jQuery(document).ready(function($) {
 
     // 翻訳テスト機能（シンプル版）
     function initSimpleTranslationTest() {
-        $('#cn_test_translation').on('click', function() {
-            var text = $('#cn_test_text').val();
+        $('#test_translation_button').on('click', function() {
+            var text = $('#test_translation_text').val();
             var $button = $(this);
-            var $result = $('#cn_test_result');
+            var $result = $('#test_translation_result');
             
             if (!text) {
                 $result.html('<div style="color: red;">テスト用のテキストを入力してください。</div>');
